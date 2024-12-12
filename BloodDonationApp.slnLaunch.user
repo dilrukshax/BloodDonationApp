@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "New Profile",
+    "Projects": [
+      {
+        "Path": "BloodDonationAPI\\BloodDonationAPI.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "BloodDonationClient\\BloodDonationClient.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

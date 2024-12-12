@@ -1,0 +1,46 @@
+﻿@inherits LayoutComponentBase
+
+<PageTitle>BloodDonationClient</PageTitle>
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <main>
+        <div class="top-row px-4">
+            <AuthorizeView>
+                <Authorized>
+                    <span class="mr-2">Hello, @context.User.Identity.Name!</span>
+                    <button class="btn btn-link" @onclick="Logout">Logout</button>
+                </Authorized>
+                <NotAuthorized>
+                    <NavLink class="nav-link" href="login">Login</NavLink>
+                    <NavLink class="nav-link" href="register">Register</NavLink>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
+
+        <article class="content px-4">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code {
+    [Inject]
+    private NavigationManager Navigation { get; set; }
+
+    [Inject]
+    private ILocalStorageService LocalStorage { get; set; }
+
+    [Inject]
+    private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("authToken");
+        ((Services.ApiAuthenticationStateProvider)AuthenticationStateProvider).NotifyUserLogout();
+        Navigation.NavigateTo("/");
+    }
+}

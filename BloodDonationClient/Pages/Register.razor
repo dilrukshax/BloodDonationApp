@@ -1,0 +1,143 @@
+﻿@page "/register"
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
+@inject HttpClient Http
+@inject NavigationManager Navigation
+@inject ILocalStorageService LocalStorage
+@inject IJSRuntime JSRuntime
+
+<h3>Register</h3>
+
+@if (isSuccess)
+{
+    <div class="alert alert-success" role="alert">
+        Registration successful! A welcome email has been sent to your email address.
+    </div>
+}
+else
+{
+    <EditForm Model="registerModel" OnValidSubmit="HandleRegistration">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="username">Username:</label>
+                <InputText id="username" @bind-Value="registerModel.Username" class="form-control" />
+            </div>
+            <div class="form-group col-md-6">
+                <label for="email">Email:</label>
+                <InputText id="email" @bind-Value="registerModel.Email" type="email" class="form-control" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <InputText id="password" @bind-Value="registerModel.Password" type="password" class="form-control" />
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-4">
+                <label for="bloodType">Blood Type:</label>
+                <InputSelect id="bloodType" @bind-Value="registerModel.BloodType" class="form-control">
+                    <option value="">-- Select Blood Type --</option>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                </InputSelect>
+            </div>
+            <div class="form-group col-md-4">
+                <label for="dob">Date of Birth:</label>
+                <InputDate id="dob" @bind-Value="registerModel.DateOfBirth" class="form-control" />
+            </div>
+            <div class="form-group col-md-4">
+                <label for="gender">Gender:</label>
+                <InputSelect id="gender" @bind-Value="registerModel.Gender" class="form-control">
+                    <option value="">-- Select Gender --</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </InputSelect>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="phone">Phone Number:</label>
+                <InputText id="phone" @bind-Value="registerModel.PhoneNumber" type="tel" class="form-control" />
+            </div>
+            <div class="form-group col-md-6">
+                <label for="address">Address:</label>
+                <InputText id="address" @bind-Value="registerModel.Address" class="form-control" />
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-3">Register</button>
+    </EditForm>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger mt-3" role="alert">
+            @errorMessage
+        </div>
+    }
+}
+
+@code {
+    private RegisterModel registerModel = new RegisterModel();
+    private bool isSuccess = false;
+    private string errorMessage = string.Empty;
+
+    private async Task HandleRegistration()
+    {
+        var response = await Http.PostAsJsonAsync("api/auth/register", registerModel);
+        if (response.IsSuccessStatusCode)
+        {
+            isSuccess = true;
+            // Optionally, navigate to login page after a delay
+            await Task.Delay(3000); // Wait for 3 seconds
+            Navigation.NavigateTo("/login");
+        }
+        else
+        {
+            errorMessage = await response.Content.ReadAsStringAsync();
+        }
+    }
+
+    public class RegisterModel
+    {
+        [Required]
+        [StringLength(50)]
+        public string Username { get; set; }
+
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        [Required]
+        [MinLength(6)]
+        public string Password { get; set; }
+
+        [Required]
+        [StringLength(3)]
+        public string BloodType { get; set; }
+
+        [Required]
+        public DateTime DateOfBirth { get; set; }
+
+        [Required]
+        [StringLength(10)]
+        public string Gender { get; set; }
+
+        [Required]
+        [Phone]
+        public string PhoneNumber { get; set; }
+
+        public string Address { get; set; }
+    }
+}
