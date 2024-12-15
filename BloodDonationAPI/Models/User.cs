@@ -21,7 +21,7 @@ namespace BloodDonationAPI.Models
         [Required]
         public string PasswordHash { get; set; }
 
-        // New Fields
+        // Profile Fields
         [Required]
         [StringLength(3)]
         public string BloodType { get; set; } // e.g., A+, O-, etc.

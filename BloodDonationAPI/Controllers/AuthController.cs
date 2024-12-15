@@ -41,7 +41,7 @@ namespace BloodDonationAPI.Controllers
                 return BadRequest("Email is already in use.");
             }
 
-            // Hash the password using SHA256
+            // Hash the password using SHA256 (Consider using BCrypt for better security)
             using var sha256 = SHA256.Create();
             var hashedPassword = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)));
 
@@ -99,7 +99,7 @@ namespace BloodDonationAPI.Controllers
                 return Unauthorized("Invalid email or password.");
             }
 
-            // Hash the input password and compare
+            // Hash the input password and compare (Consider using BCrypt for better security)
             using var sha256 = SHA256.Create();
             var hashedInputPassword = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password)));
 
@@ -110,7 +110,7 @@ namespace BloodDonationAPI.Controllers
 
             // Generate JWT Token
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"] ?? "YourNew256BitKeyHereYourNew256BitKeyHere");
+            var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]); // Use configuration key
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
