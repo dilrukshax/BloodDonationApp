@@ -256,7 +256,7 @@ else if (profile != null)
                 {
                     // Optionally, re-authenticate or update the token
                     // For simplicity, we'll reload the profile
-                    ((ApiAuthenticationStateProvider)AuthStateProvider).NotifyUserAuthentication(await _localStorage.GetItemAsync<string>("authToken"));
+                    ((ApiAuthenticationStateProvider)AuthStateProvider).NotifyUserAuthentication(await LocalStorage.GetItemAsync<string>("authToken"));
                 }
             }
             else
