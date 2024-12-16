@@ -40,7 +40,7 @@
     private async Task Logout()
     {
         await LocalStorage.RemoveItemAsync("authToken");
-        ((Services.ApiAuthenticationStateProvider)AuthenticationStateProvider).NotifyUserLogout();
+        ((ApiAuthenticationStateProvider)AuthenticationStateProvider).NotifyUserLogout();
         Navigation.NavigateTo("/");
     }
 }

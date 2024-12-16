@@ -1,2 +1,12 @@
+# .NET Core
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
 
+# Blazor
+wwwroot/
+dist/
 .gitattributes

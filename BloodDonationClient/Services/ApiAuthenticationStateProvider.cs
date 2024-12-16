@@ -1,6 +1,4 @@
-﻿// File: BloodDonationClient/Services/ApiAuthenticationStateProvider.cs
-
-using Microsoft.AspNetCore.Components.Authorization;
+﻿using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
 using System.Security.Claims;
 using System.IdentityModel.Tokens.Jwt;

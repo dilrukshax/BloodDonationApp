@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BloodDonationClient")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ece74c61c09fbca5b3996ba9e3ec8cb1455a1d4a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6fb96f85f345a5754d8c37c3f6743310b4951c7d")]
 [assembly: System.Reflection.AssemblyProductAttribute("BloodDonationClient")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BloodDonationClient")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

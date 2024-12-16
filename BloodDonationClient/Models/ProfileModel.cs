@@ -1,11 +1,21 @@
-﻿// File: BloodDonationAPI/DTOs/UpdateProfileDto.cs
-
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace BloodDonationAPI.DTOs
+namespace BloodDonationClient.Models
 {
-    public class UpdateProfileDto
+    public class ProfileModel
+    {
+        public int Id { get; set; }
+        public string Username { get; set; }
+        public string Email { get; set; }
+        public string BloodType { get; set; }
+        public DateTime DateOfBirth { get; set; }
+        public string Gender { get; set; }
+        public string PhoneNumber { get; set; }
+        public string Address { get; set; }
+    }
+
+    public class UpdateProfileModel
     {
         [StringLength(50)]
         public string Username { get; set; }
@@ -29,5 +39,11 @@ namespace BloodDonationAPI.DTOs
 
         [MinLength(6)]
         public string? NewPassword { get; set; } // Optional: For updating password
+    }
+
+    public class DeleteProfileModel
+    {
+        [Required]
+        public string Password { get; set; }
     }
 }
