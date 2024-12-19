@@ -1,0 +1,76 @@
+﻿@page "/events/{EventId:int}"
+@using BloodDonationClient.Models
+@using BloodDonationClient.Services
+@inject EventService EventService
+@inject NavigationManager Navigation
+
+<PageTitle>Event Details</PageTitle>
+
+<h3>Event Details</h3>
+
+@if (isLoading)
+{
+    <p><em>Loading event details...</em></p>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+else if (eventDetail != null)
+{
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@eventDetail.Title</h5>
+            <p class="card-text">@eventDetail.Description</p>
+            <p><strong>Date:</strong> @eventDetail.EventDate.ToString("f")</p>
+            <p><strong>Location:</strong> @eventDetail.Location</p>
+            <p><strong>Created At:</strong> @eventDetail.CreatedAt.ToString("f")</p>
+            <p><strong>Last Updated:</strong> @eventDetail.UpdatedAt.ToString("f")</p>
+        </div>
+    </div>
+
+    <button class="btn btn-secondary mt-3" @onclick="GoBack">Back to Events</button>
+}
+else
+{
+    <p>Event not found.</p>
+}
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    private EventDto eventDetail;
+    private bool isLoading = true;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadEventDetails();
+    }
+
+    private async Task LoadEventDetails()
+    {
+        isLoading = true;
+        errorMessage = string.Empty;
+
+        try
+        {
+            eventDetail = await EventService.GetEventByIdAsync(EventId);
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while loading event details.";
+            // Optionally log the exception
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void GoBack()
+    {
+        Navigation.NavigateTo("/events");
+    }
+}

@@ -1,0 +1,67 @@
+﻿@page "/events"
+@using BloodDonationClient.Models
+@using BloodDonationClient.Services
+@inject EventService EventService
+@inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Components.Authorization
+
+<PageTitle>Blood Donation Events</PageTitle>
+
+<h3>Blood Donation Events</h3>
+
+@if (isLoading)
+{
+    <p><em>Loading events...</em></p>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+else if (events != null && events.Count > 0)
+{
+    <div class="list-group">
+        @foreach (var evt in events)
+        {
+            <a href="@($"/events/{evt.Id}")" class="list-group-item list-group-item-action">
+                <h5>@evt.Title</h5>
+                <p>@evt.Description</p>
+                <small><strong>Date:</strong> @evt.EventDate.ToString("f") | <strong>Location:</strong> @evt.Location</small>
+            </a>
+        }
+    </div>
+}
+else
+{
+    <p>No upcoming events found.</p>
+}
+
+@code {
+    private List<EventDto> events = new List<EventDto>();
+    private bool isLoading = true;
+    private string errorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadEvents();
+    }
+
+    private async Task LoadEvents()
+    {
+        isLoading = true;
+        errorMessage = string.Empty;
+
+        try
+        {
+            events = await EventService.GetAllEventsAsync();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while loading events.";
+            // Optionally log the exception
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+}

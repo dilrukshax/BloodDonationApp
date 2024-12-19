@@ -1,0 +1,139 @@
+﻿@page "/admin/events/edit/{EventId:int}"
+@using BloodDonationClient.Models
+@using BloodDonationClient.Services
+@using Microsoft.AspNetCore.Components.Forms
+@inject EventService EventService
+@inject NavigationManager Navigation
+
+<PageTitle>Admin - Edit Event</PageTitle>
+
+<h3>Edit Blood Donation Event</h3>
+
+@if (isLoading)
+{
+    <p><em>Loading event details...</em></p>
+}
+else if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+else if (eventDetail != null)
+{
+    <EditForm Model="eventUpdateDto" OnValidSubmit="HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group">
+            <label for="title">Title:</label>
+            <InputText id="title" @bind-Value="eventUpdateDto.Title" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description:</label>
+            <InputTextArea id="description" @bind-Value="eventUpdateDto.Description" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="eventDate">Event Date:</label>
+            <InputDate id="eventDate" @bind-Value="eventUpdateDto.EventDate" class="form-control" />
+        </div>
+
+        <div class="form-group">
+            <label for="location">Location:</label>
+            <InputText id="location" @bind-Value="eventUpdateDto.Location" class="form-control" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <button type="button" class="btn btn-secondary ml-2" @onclick="Cancel">Cancel</button>
+    </EditForm>
+
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="alert alert-success mt-3">@successMessage</div>
+    }
+
+    @if (!string.IsNullOrEmpty(updateErrorMessage))
+    {
+        <div class="alert alert-danger mt-3">@updateErrorMessage</div>
+    }
+}
+else
+{
+    <p>Event not found.</p>
+}
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    private EventDto eventDetail;
+    private EventUpdateDto eventUpdateDto = new EventUpdateDto();
+    private bool isLoading = true;
+    private string errorMessage;
+    private string successMessage;
+    private string updateErrorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadEventDetails();
+    }
+
+    private async Task LoadEventDetails()
+    {
+        isLoading = true;
+        errorMessage = string.Empty;
+
+        try
+        {
+            eventDetail = await EventService.GetEventByIdAsync(EventId);
+            // Initialize the update DTO with existing event details
+            eventUpdateDto = new EventUpdateDto
+                {
+                    Title = eventDetail.Title,
+                    Description = eventDetail.Description,
+                    EventDate = eventDetail.EventDate,
+                    Location = eventDetail.Location
+                };
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while loading event details.";
+            // Optionally log the exception
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        updateErrorMessage = string.Empty;
+        successMessage = string.Empty;
+
+        try
+        {
+            var success = await EventService.UpdateEventAsync(EventId, eventUpdateDto);
+            if (success)
+            {
+                successMessage = "Event updated successfully.";
+                // Optionally, navigate back to the events list
+                Navigation.NavigateTo("/admin/events");
+            }
+            else
+            {
+                updateErrorMessage = "Failed to update the event.";
+            }
+        }
+        catch (Exception ex)
+        {
+            updateErrorMessage = "An error occurred while updating the event.";
+            // Optionally log the exception
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/admin/events");
+    }
+}

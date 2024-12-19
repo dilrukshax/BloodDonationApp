@@ -1,0 +1,85 @@
+﻿@page "/admin/events/add"
+@using BloodDonationClient.Models
+@using BloodDonationClient.Services
+@using Microsoft.AspNetCore.Components.Forms
+@inject EventService EventService
+@inject NavigationManager Navigation
+
+<PageTitle>Admin - Add Event</PageTitle>
+
+<h3>Add New Blood Donation Event</h3>
+
+<EditForm Model="eventCreateDto" OnValidSubmit="HandleValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="title">Title:</label>
+        <InputText id="title" @bind-Value="eventCreateDto.Title" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="description">Description:</label>
+        <InputTextArea id="description" @bind-Value="eventCreateDto.Description" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="eventDate">Event Date:</label>
+        <InputDate id="eventDate" @bind-Value="eventCreateDto.EventDate" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label for="location">Location:</label>
+        <InputText id="location" @bind-Value="eventCreateDto.Location" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Create Event</button>
+    <button type="button" class="btn btn-secondary ml-2" @onclick="Cancel">Cancel</button>
+</EditForm>
+
+@if (!string.IsNullOrEmpty(successMessage))
+{
+    <div class="alert alert-success mt-3">@successMessage</div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger mt-3">@errorMessage</div>
+}
+
+@code {
+    private EventCreateDto eventCreateDto = new EventCreateDto();
+    private string successMessage;
+    private string errorMessage;
+
+    private async Task HandleValidSubmit()
+    {
+        errorMessage = string.Empty;
+        successMessage = string.Empty;
+
+        try
+        {
+            var success = await EventService.CreateEventAsync(eventCreateDto);
+            if (success)
+            {
+                successMessage = "Event created successfully.";
+                // Optionally, navigate back to the events list
+                Navigation.NavigateTo("/admin/events");
+            }
+            else
+            {
+                errorMessage = "Failed to create the event.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while creating the event.";
+            // Optionally log the exception
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/admin/events");
+    }
+}

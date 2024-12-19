@@ -1,5 +1,3 @@
-// File: BloodDonationClient/Program.cs
-
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using BloodDonationClient;
@@ -7,12 +5,23 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Blazored.LocalStorage;
 using BloodDonationClient.Services;
 using System;
+using System.Net.Http.Headers;
+using System.Threading.Tasks;
 
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-// Register the AuthorizationMessageHandler
+// Add Blazored LocalStorage
+builder.Services.AddBlazoredLocalStorage();
+
+// Add Authorization
+builder.Services.AddAuthorizationCore();
+
+// Register ApiAuthenticationStateProvider
+builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
+
+// Register AuthorizationMessageHandler
 builder.Services.AddScoped<AuthorizationMessageHandler>();
 
 // Configure HttpClient with the AuthorizationMessageHandler
@@ -22,17 +31,24 @@ builder.Services.AddHttpClient("BloodDonationAPI", client =>
 })
 .AddHttpMessageHandler<AuthorizationMessageHandler>();
 
-// Register the HttpClient for dependency injection
+// Register the named HttpClient for dependency injection
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("BloodDonationAPI"));
 
-// Add Blazored LocalStorage
-builder.Services.AddBlazoredLocalStorage();
-
-// Add Authentication
-builder.Services.AddAuthorizationCore();
-builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
-
-// Register AuthService
+// Register AuthService and AdminService to use the named HttpClient
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<AdminService>();
+builder.Services.AddScoped<EventService>();
 
-await builder.Build().RunAsync();
+var host = builder.Build();
+
+// Initialize the AuthenticationStateProvider with the token from LocalStorage
+var localStorage = host.Services.GetRequiredService<ILocalStorageService>();
+var authStateProvider = host.Services.GetRequiredService<AuthenticationStateProvider>() as ApiAuthenticationStateProvider;
+var token = await localStorage.GetItemAsync<string>("authToken");
+if (!string.IsNullOrWhiteSpace(token))
+{
+    authStateProvider.NotifyUserAuthentication(token);
+    host.Services.GetRequiredService<HttpClient>().DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+}
+
+await host.RunAsync();

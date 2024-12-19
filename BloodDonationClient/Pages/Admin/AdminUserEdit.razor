@@ -1,0 +1,193 @@
+﻿@page "/admin/users/edit/{UserId:int}"
+@using BloodDonationClient.Models
+@using BloodDonationClient.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@inject AdminService AdminService
+@inject NavigationManager Navigation
+
+<PageTitle>Admin - Edit User</PageTitle>
+
+<AuthorizeView Roles="admin">
+    <Authorized Context="authContext">
+        <!-- Renamed Context parameter -->
+        <h3>Edit User</h3>
+
+        @if (isLoading)
+        {
+            <p><em>Loading user details...</em></p>
+        }
+        else if (!string.IsNullOrEmpty(errorMessage))
+        {
+            <div class="alert alert-danger">@errorMessage</div>
+        }
+        else if (user != null)
+        {
+            <EditForm Model="updateModel" OnValidSubmit="HandleValidSubmit">
+                <DataAnnotationsValidator />
+                <ValidationSummary />
+
+                <div class="form-group">
+                    <label>Username:</label>
+                    <InputText @bind-Value="updateModel.Username" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label>Email:</label>
+                    <InputText @bind-Value="updateModel.Email" type="email" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label>Blood Type:</label>
+                    <InputSelect @bind-Value="updateModel.BloodType" class="form-control">
+                        <option value="">-- Select Blood Type --</option>
+                        <option value="A+">A+</option>
+                        <option value="A-">A-</option>
+                        <option value="B+">B+</option>
+                        <option value="B-">B-</option>
+                        <option value="AB+">AB+</option>
+                        <option value="AB-">AB-</option>
+                        <option value="O+">O+</option>
+                        <option value="O-">O-</option>
+                    </InputSelect>
+                </div>
+
+                <div class="form-group">
+                    <label>Date of Birth:</label>
+                    <InputDate @bind-Value="updateModel.DateOfBirth" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label>Gender:</label>
+                    <InputSelect @bind-Value="updateModel.Gender" class="form-control">
+                        <option value="">-- Select Gender --</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </InputSelect>
+                </div>
+
+                <div class="form-group">
+                    <label>Phone Number:</label>
+                    <InputText @bind-Value="updateModel.PhoneNumber" type="tel" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label>Address:</label>
+                    <InputText @bind-Value="updateModel.Address" class="form-control" />
+                </div>
+
+                <div class="form-group">
+                    <label>Role:</label>
+                    <InputSelect @bind-Value="updateModel.Role" class="form-control">
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                    </InputSelect>
+                </div>
+
+                <div class="form-group">
+                    <label>New Password:</label>
+                    <InputText @bind-Value="updateModel.NewPassword" type="password" class="form-control" />
+                </div>
+
+                <button type="submit" class="btn btn-success">Save Changes</button>
+                <button type="button" class="btn btn-secondary ml-2" @onclick="Cancel">Cancel</button>
+            </EditForm>
+
+            @if (!string.IsNullOrEmpty(successMessage))
+            {
+                <div class="alert alert-success mt-3">@successMessage</div>
+            }
+
+            @if (!string.IsNullOrEmpty(updateErrorMessage))
+            {
+                <div class="alert alert-danger mt-3">@updateErrorMessage</div>
+            }
+        }
+    </Authorized>
+    <NotAuthorized>
+        <h3>Access Denied</h3>
+        <p>You do not have permission to view this page.</p>
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    [Parameter]
+    public int UserId { get; set; }
+
+    private AdminUserDto user;
+    private UpdateUserDto updateModel = new UpdateUserDto();
+    private bool isLoading = true;
+    private string errorMessage;
+    private string successMessage;
+    private string updateErrorMessage;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadUserDetails();
+    }
+
+    private async Task LoadUserDetails()
+    {
+        isLoading = true;
+        errorMessage = string.Empty;
+
+        try
+        {
+            user = await AdminService.GetUserByIdAsync(UserId);
+            // Initialize updateModel with current user data
+            updateModel = new UpdateUserDto
+                {
+                    Username = user.Username,
+                    Email = user.Email,
+                    BloodType = user.BloodType,
+                    DateOfBirth = user.DateOfBirth,
+                    Gender = user.Gender,
+                    PhoneNumber = user.PhoneNumber,
+                    Address = user.Address,
+                    Role = user.Role
+                    // NewPassword is left null by default
+                };
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while loading user details.";
+            // Optionally log the exception
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        updateErrorMessage = string.Empty;
+        successMessage = string.Empty;
+
+        try
+        {
+            var success = await AdminService.UpdateUserAsync(UserId, updateModel);
+            if (success)
+            {
+                successMessage = "User updated successfully.";
+                // Optionally, reload user details
+                await LoadUserDetails();
+            }
+            else
+            {
+                updateErrorMessage = "Failed to update the user.";
+            }
+        }
+        catch (Exception ex)
+        {
+            updateErrorMessage = "An error occurred while updating the user.";
+            // Optionally log the exception
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo($"/admin/users/{UserId}");
+    }
+}

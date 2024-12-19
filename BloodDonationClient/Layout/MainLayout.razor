@@ -2,30 +2,32 @@
 
 <PageTitle>BloodDonationClient</PageTitle>
 
-<div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            <AuthorizeView>
-                <Authorized>
-                    <span class="mr-2">Hello, @context.User.Identity.Name!</span>
-                    <button class="btn btn-link" @onclick="Logout">Logout</button>
-                </Authorized>
-                <NotAuthorized>
-                    <NavLink class="nav-link" href="login">Login</NavLink>
-                    <NavLink class="nav-link" href="register">Register</NavLink>
-                </NotAuthorized>
-            </AuthorizeView>
+<CascadingAuthenticationState>
+    <div class="page">
+        <div class="sidebar">
+            <NavMenu />
         </div>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
+        <main>
+            <div class="top-row px-4">
+                <AuthorizeView>
+                    <Authorized>
+                        <span class="mr-2">Hello, @username!</span>
+                        <button class="btn btn-link" @onclick="Logout">Logout</button>
+                    </Authorized>
+                    <NotAuthorized>
+                        <NavLink class="nav-link" href="login">Login</NavLink>
+                        <NavLink class="nav-link" href="register">Register</NavLink>
+                    </NotAuthorized>
+                </AuthorizeView>
+            </div>
+
+            <article class="content px-4">
+                @Body
+            </article>
+        </main>
+    </div>
+</CascadingAuthenticationState>
 
 @code {
     [Inject]
@@ -37,10 +39,43 @@
     [Inject]
     private AuthenticationStateProvider AuthenticationStateProvider { get; set; }
 
+    private string username = "User";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            username = user.Identity.Name ?? "User";
+        }
+
+        // Subscribe to AuthenticationStateChanged to update username dynamically
+        AuthenticationStateProvider.AuthenticationStateChanged += async (task) =>
+        {
+            var state = await task;
+            var usr = state.User;
+            if (usr.Identity.IsAuthenticated)
+            {
+                username = usr.Identity.Name ?? "User";
+            }
+            else
+            {
+                username = "User";
+            }
+
+            InvokeAsync(StateHasChanged);
+        };
+    }
+
     private async Task Logout()
     {
         await LocalStorage.RemoveItemAsync("authToken");
-        ((ApiAuthenticationStateProvider)AuthenticationStateProvider).NotifyUserLogout();
+        if (AuthenticationStateProvider is ApiAuthenticationStateProvider apiAuthStateProvider)
+        {
+            apiAuthStateProvider.NotifyUserLogout();
+        }
         Navigation.NavigateTo("/");
     }
 }

@@ -1,6 +1,4 @@
-﻿// File: BloodDonationAPI/DTOs/RegisterDto.cs
-
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace BloodDonationAPI.DTOs
@@ -35,5 +33,8 @@ namespace BloodDonationAPI.DTOs
         public string PhoneNumber { get; set; }
 
         public string Address { get; set; }
+
+        // Optional: Admin Code for registering as admin
+        public string? AdminCode { get; set; }
     }
 }

@@ -7,12 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Security.Claims;
-using System.Text;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+using BCrypt.Net;
 
 namespace BloodDonationAPI.Controllers
 {
@@ -22,13 +18,11 @@ namespace BloodDonationAPI.Controllers
     public class ProfileController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly IConfiguration _configuration;
         private readonly IEmailService _emailService;
 
-        public ProfileController(ApplicationDbContext context, IConfiguration configuration, IEmailService emailService)
+        public ProfileController(ApplicationDbContext context, IEmailService emailService)
         {
             _context = context;
-            _configuration = configuration;
             _emailService = emailService;
         }
 
@@ -104,8 +98,8 @@ namespace BloodDonationAPI.Controllers
 
             if (!string.IsNullOrWhiteSpace(updateDto.NewPassword))
             {
-                using var sha256 = SHA256.Create();
-                var hashedPassword = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(updateDto.NewPassword)));
+                // Hash the new password using BCrypt
+                var hashedPassword = BCrypt.Net.BCrypt.HashPassword(updateDto.NewPassword);
                 user.PasswordHash = hashedPassword;
             }
 
@@ -125,7 +119,7 @@ namespace BloodDonationAPI.Controllers
             {
                 await _emailService.SendEmailAsync(user.Email, subject, body);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Log the exception (implement logging as needed)
                 // For now, we'll ignore email sending failures
@@ -150,9 +144,8 @@ namespace BloodDonationAPI.Controllers
                 return NotFound("User not found.");
 
             // Verify password before deletion
-            using var sha256 = SHA256.Create();
-            var hashedInputPassword = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(deleteDto.Password)));
-            if (user.PasswordHash != hashedInputPassword)
+            bool isPasswordValid = BCrypt.Net.BCrypt.Verify(deleteDto.Password, user.PasswordHash);
+            if (!isPasswordValid)
             {
                 return Unauthorized("Incorrect password.");
             }
@@ -173,7 +166,7 @@ namespace BloodDonationAPI.Controllers
             {
                 await _emailService.SendEmailAsync(user.Email, subject, body);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 // Log the exception (implement logging as needed)
                 // For now, we'll ignore email sending failures

@@ -39,5 +39,10 @@ namespace BloodDonationAPI.Models
 
         [StringLength(200)]
         public string Address { get; set; }
+
+        // New Role Property
+        [Required]
+        [StringLength(20)]
+        public string Role { get; set; } = "user"; // Default role is 'user'
     }
 }

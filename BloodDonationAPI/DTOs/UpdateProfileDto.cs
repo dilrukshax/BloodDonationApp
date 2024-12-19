@@ -1,6 +1,4 @@
-﻿// File: BloodDonationAPI/DTOs/UpdateProfileDto.cs
-
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace BloodDonationAPI.DTOs

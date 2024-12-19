@@ -8,6 +8,7 @@ D:\Project\BloodDonationApp\BloodDonationAPI\bin\Debug\net9.0\BloodDonationAPI.d
 D:\Project\BloodDonationApp\BloodDonationAPI\bin\Debug\net9.0\BloodDonationAPI.pdb
 D:\Project\BloodDonationApp\BloodDonationAPI\bin\Debug\net9.0\Azure.Core.dll
 D:\Project\BloodDonationApp\BloodDonationAPI\bin\Debug\net9.0\Azure.Identity.dll
+D:\Project\BloodDonationApp\BloodDonationAPI\bin\Debug\net9.0\BCrypt.Net-Next.dll
 D:\Project\BloodDonationApp\BloodDonationAPI\bin\Debug\net9.0\Humanizer.dll
 D:\Project\BloodDonationApp\BloodDonationAPI\bin\Debug\net9.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 D:\Project\BloodDonationApp\BloodDonationAPI\bin\Debug\net9.0\Microsoft.AspNetCore.OpenApi.dll
@@ -38,6 +39,7 @@ D:\Project\BloodDonationApp\BloodDonationAPI\bin\Debug\net9.0\Microsoft.OpenApi.
 D:\Project\BloodDonationApp\BloodDonationAPI\bin\Debug\net9.0\Microsoft.SqlServer.Server.dll
 D:\Project\BloodDonationApp\BloodDonationAPI\bin\Debug\net9.0\Microsoft.Win32.SystemEvents.dll
 D:\Project\BloodDonationApp\BloodDonationAPI\bin\Debug\net9.0\Mono.TextTemplating.dll
+D:\Project\BloodDonationApp\BloodDonationAPI\bin\Debug\net9.0\BouncyCastle.Crypto.dll
 D:\Project\BloodDonationApp\BloodDonationAPI\bin\Debug\net9.0\Swashbuckle.AspNetCore.Swagger.dll
 D:\Project\BloodDonationApp\BloodDonationAPI\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 D:\Project\BloodDonationApp\BloodDonationAPI\bin\Debug\net9.0\Swashbuckle.AspNetCore.SwaggerUI.dll
