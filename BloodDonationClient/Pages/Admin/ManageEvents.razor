@@ -6,75 +6,79 @@
 
 <PageTitle>Admin - Manage Events</PageTitle>
 
-<h3>Manage Blood Donation Events</h3>
+<div class="container my-5">
+    <h3 class="text-primary">Manage Blood Donation Events</h3>
 
-<button class="btn btn-primary mb-3" @onclick="NavigateToAddEvent">Add New Event</button>
+    <!-- Add New Event Button -->
+    <button class="btn btn-primary mb-3" @onclick="NavigateToAddEvent">Add New Event</button>
 
-@if (isLoading)
-{
-    <p><em>Loading events...</em></p>
-}
-else if (!string.IsNullOrEmpty(errorMessage))
-{
-    <div class="alert alert-danger">@errorMessage</div>
-}
-else if (events != null && events.Count > 0)
-{
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Date</th>
-                <th>Location</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var evt in events)
-            {
+    @if (isLoading)
+    {
+        <p><em>Loading events...</em></p>
+    }
+    else if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
+    else if (events != null && events.Count > 0)
+    {
+        <!-- Event Table -->
+        <table class="table table-striped">
+            <thead>
                 <tr>
-                    <td>@evt.Title</td>
-                    <td>@evt.EventDate.ToString("f")</td>
-                    <td>@evt.Location</td>
-                    <td>
-                        <button class="btn btn-info btn-sm mr-2" @onclick="() => ViewEvent(evt.Id)">View</button>
-                        <button class="btn btn-primary btn-sm mr-2" @onclick="() => EditEvent(evt.Id)">Edit</button>
-                        <button class="btn btn-danger btn-sm" @onclick="() => ConfirmDeleteEvent(evt.Id)">Delete</button>
-                    </td>
+                    <th>Title</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th>Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No events found.</p>
-}
+            </thead>
+            <tbody>
+                @foreach (var evt in events)
+                {
+                    <tr>
+                        <td>@evt.Title</td>
+                        <td>@evt.EventDate.ToString("f")</td>
+                        <td>@evt.Location</td>
+                        <td>
+                            <button class="btn btn-info btn-sm mr-2" @onclick="() => ViewEvent(evt.Id)">View</button>
+                            <button class="btn btn-primary btn-sm mr-2" @onclick="() => EditEvent(evt.Id)">Edit</button>
+                            <button class="btn btn-danger btn-sm" @onclick="() => ConfirmDeleteEvent(evt.Id)">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No events found.</p>
+    }
 
-<!-- Delete Confirmation Modal -->
-@if (showDeleteConfirmation)
-{
-    <div class="modal show d-block" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirm Deletion</h5>
-                    <button type="button" class="close" @onclick="CancelDelete" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to delete this event?</p>
-                </div>
-                <div class="modal-footer">
-                    <button class="btn btn-danger" @onclick="DeleteEvent">Delete</button>
-                    <button class="btn btn-secondary" @onclick="CancelDelete">Cancel</button>
+    <!-- Delete Confirmation Modal -->
+    @if (showDeleteConfirmation)
+    {
+        <div class="modal show d-block" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Deletion</h5>
+                        <button type="button" class="close" @onclick="CancelDelete" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Are you sure you want to delete this event?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" @onclick="DeleteEvent">Delete</button>
+                        <button class="btn btn-secondary" @onclick="CancelDelete">Cancel</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-    <div class="modal-backdrop fade show"></div>
-}
+        <div class="modal-backdrop fade show"></div>
+    }
+</div>
 
 @code {
     private List<EventDto> events = new List<EventDto>();

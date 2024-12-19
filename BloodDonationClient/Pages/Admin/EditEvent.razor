@@ -7,60 +7,70 @@
 
 <PageTitle>Admin - Edit Event</PageTitle>
 
-<h3>Edit Blood Donation Event</h3>
+<div class="container my-5">
+    <h3 class="text-primary">Edit Blood Donation Event</h3>
 
-@if (isLoading)
-{
-    <p><em>Loading event details...</em></p>
-}
-else if (!string.IsNullOrEmpty(errorMessage))
-{
-    <div class="alert alert-danger">@errorMessage</div>
-}
-else if (eventDetail != null)
-{
-    <EditForm Model="eventUpdateDto" OnValidSubmit="HandleValidSubmit">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <div class="form-group">
-            <label for="title">Title:</label>
-            <InputText id="title" @bind-Value="eventUpdateDto.Title" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label for="description">Description:</label>
-            <InputTextArea id="description" @bind-Value="eventUpdateDto.Description" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label for="eventDate">Event Date:</label>
-            <InputDate id="eventDate" @bind-Value="eventUpdateDto.EventDate" class="form-control" />
-        </div>
-
-        <div class="form-group">
-            <label for="location">Location:</label>
-            <InputText id="location" @bind-Value="eventUpdateDto.Location" class="form-control" />
-        </div>
-
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-        <button type="button" class="btn btn-secondary ml-2" @onclick="Cancel">Cancel</button>
-    </EditForm>
-
-    @if (!string.IsNullOrEmpty(successMessage))
+    @if (isLoading)
     {
-        <div class="alert alert-success mt-3">@successMessage</div>
+        <p><em>Loading event details...</em></p>
     }
-
-    @if (!string.IsNullOrEmpty(updateErrorMessage))
+    else if (!string.IsNullOrEmpty(errorMessage))
     {
-        <div class="alert alert-danger mt-3">@updateErrorMessage</div>
+        <div class="alert alert-danger">@errorMessage</div>
     }
-}
-else
-{
-    <p>Event not found.</p>
-}
+    else if (eventDetail != null)
+    {
+        <EditForm Model="eventUpdateDto" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
+
+            <!-- Event Title -->
+            <div class="form-group">
+                <label for="title">Event Title:</label>
+                <InputText id="title" @bind-Value="eventUpdateDto.Title" class="form-control" placeholder="Enter event title" />
+            </div>
+
+            <!-- Event Description -->
+            <div class="form-group">
+                <label for="description">Event Description:</label>
+                <InputTextArea id="description" @bind-Value="eventUpdateDto.Description" class="form-control" placeholder="Enter event description" rows="3" />
+            </div>
+
+            <!-- Event Date -->
+            <div class="form-group">
+                <label for="eventDate">Event Date:</label>
+                <InputDate id="eventDate" @bind-Value="eventUpdateDto.EventDate" class="form-control" />
+            </div>
+
+            <!-- Event Location -->
+            <div class="form-group">
+                <label for="location">Event Location:</label>
+                <InputText id="location" @bind-Value="eventUpdateDto.Location" class="form-control" placeholder="Enter event location" />
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="form-group mt-4">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                <button type="button" class="btn btn-secondary ml-2" @onclick="Cancel">Cancel</button>
+            </div>
+        </EditForm>
+
+        <!-- Success and Error Messages -->
+        @if (!string.IsNullOrEmpty(successMessage))
+        {
+            <div class="alert alert-success mt-3">@successMessage</div>
+        }
+
+        @if (!string.IsNullOrEmpty(updateErrorMessage))
+        {
+            <div class="alert alert-danger mt-3">@updateErrorMessage</div>
+        }
+    }
+    else
+    {
+        <p>Event not found.</p>
+    }
+</div>
 
 @code {
     [Parameter]

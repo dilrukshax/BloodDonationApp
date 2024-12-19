@@ -7,26 +7,43 @@
 
 <PageTitle>Blood Donation Events</PageTitle>
 
-<h3>Blood Donation Events</h3>
+<h3 class="text-center my-4">Blood Donation Events</h3>
 
 @if (isLoading)
 {
-    <p><em>Loading events...</em></p>
+    <div class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
 }
 else if (!string.IsNullOrEmpty(errorMessage))
 {
-    <div class="alert alert-danger">@errorMessage</div>
+    <div class="alert alert-danger mt-3">@errorMessage</div>
 }
 else if (events != null && events.Count > 0)
 {
-    <div class="list-group">
+    <div class="row">
         @foreach (var evt in events)
         {
-            <a href="@($"/events/{evt.Id}")" class="list-group-item list-group-item-action">
-                <h5>@evt.Title</h5>
-                <p>@evt.Description</p>
-                <small><strong>Date:</strong> @evt.EventDate.ToString("f") | <strong>Location:</strong> @evt.Location</small>
-            </a>
+            <div class="col-md-4 mb-4">
+                <div class="card shadow-sm h-100">
+                    <!-- Image removed -->
+                    <div class="card-body">
+                        <h5 class="card-title">@evt.Title</h5>
+                        <p class="card-text">
+                            @(evt.Description.Length > 100 ? evt.Description.Substring(0, 100) + "..." : evt.Description)
+                        </p>
+                        <small class="text-muted">
+                            <strong>Date:</strong> @evt.EventDate.ToString("f")
+                            | <strong>Location:</strong> @evt.Location
+                        </small>
+                    </div>
+                    <div class="card-footer text-center">
+                        <a href="@($"/events/{evt.Id}")" class="btn btn-primary w-100">View Details</a>
+                    </div>
+                </div>
+            </div>
         }
     </div>
 }
@@ -56,8 +73,9 @@ else
         }
         catch (Exception ex)
         {
-            errorMessage = "An error occurred while loading events.";
-            // Optionally log the exception
+            errorMessage = "An error occurred while loading events. Please try again later.";
+            // Optionally log the exception here
+            // Logger.LogError(ex, "Error fetching events.");
         }
         finally
         {

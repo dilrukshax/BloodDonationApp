@@ -6,35 +6,37 @@
 
 <PageTitle>Event Details</PageTitle>
 
-<h3>Event Details</h3>
+<div class="container my-5">
+    <h3 class="text-primary">Event Details</h3>
 
-@if (isLoading)
-{
-    <p><em>Loading event details...</em></p>
-}
-else if (!string.IsNullOrEmpty(errorMessage))
-{
-    <div class="alert alert-danger">@errorMessage</div>
-}
-else if (eventDetail != null)
-{
-    <div class="card">
-        <div class="card-body">
-            <h5 class="card-title">@eventDetail.Title</h5>
-            <p class="card-text">@eventDetail.Description</p>
-            <p><strong>Date:</strong> @eventDetail.EventDate.ToString("f")</p>
-            <p><strong>Location:</strong> @eventDetail.Location</p>
-            <p><strong>Created At:</strong> @eventDetail.CreatedAt.ToString("f")</p>
-            <p><strong>Last Updated:</strong> @eventDetail.UpdatedAt.ToString("f")</p>
+    @if (isLoading)
+    {
+        <p><em>Loading event details...</em></p>
+    }
+    else if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
+    else if (eventDetail != null)
+    {
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">@eventDetail.Title</h5>
+                <p class="card-text">@eventDetail.Description</p>
+                <p><strong>Date:</strong> @eventDetail.EventDate.ToString("f")</p>
+                <p><strong>Location:</strong> @eventDetail.Location</p>
+                <p><strong>Created At:</strong> @eventDetail.CreatedAt.ToString("f")</p>
+                <p><strong>Last Updated:</strong> @eventDetail.UpdatedAt.ToString("f")</p>
+            </div>
         </div>
-    </div>
 
-    <button class="btn btn-secondary mt-3" @onclick="GoBack">Back to Events</button>
-}
-else
-{
-    <p>Event not found.</p>
-}
+        <button class="btn btn-secondary mt-3" @onclick="GoBack">Back to Events</button>
+    }
+    else
+    {
+        <p>Event not found.</p>
+    }
+</div>
 
 @code {
     [Parameter]
@@ -62,6 +64,7 @@ else
         {
             errorMessage = "An error occurred while loading event details.";
             // Optionally log the exception
+            // For example: Logger.LogError(ex, "Error loading event details.");
         }
         finally
         {

@@ -6,6 +6,7 @@
 @inject NavigationManager Navigation
 @inject ILocalStorageService LocalStorage
 @inject AuthenticationStateProvider AuthStateProvider
+@inject IJSRuntime JSRuntime
 
 <h3>Login</h3>
 
@@ -14,34 +15,66 @@
     <ValidationSummary />
 
     <div class="form-group">
-        <label>Email:</label>
-        <InputText @bind-Value="loginModel.Email" type="email" class="form-control" />
+        <label for="email">Email:</label>
+        <InputText id="email" @bind-Value="loginModel.Email" type="email" class="form-control" />
+        <ValidationMessage For="@(() => loginModel.Email)" />
     </div>
     <div class="form-group">
-        <label>Password:</label>
-        <InputText @bind-Value="loginModel.Password" type="password" class="form-control" />
+        <label for="password">Password:</label>
+        <InputText id="password" @bind-Value="loginModel.Password" type="password" class="form-control" />
+        <ValidationMessage For="@(() => loginModel.Password)" />
     </div>
-    <button type="submit" class="btn btn-primary">Login</button>
+
+    <button type="submit" class="btn btn-primary" disabled="@isLoading">Login</button>
 </EditForm>
+
+@if (isLoading)
+{
+    <div class="text-center">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger mt-3">@errorMessage</div>
+}
 
 @code {
     private LoginModel loginModel = new LoginModel();
+    private bool isLoading = false;
+    private string errorMessage;
 
     private async Task HandleLogin()
     {
-        var response = await Http.PostAsJsonAsync("api/auth/login", loginModel);
-        if (response.IsSuccessStatusCode)
+        isLoading = true;
+        errorMessage = string.Empty;
+
+        try
         {
-            var result = await response.Content.ReadFromJsonAsync<LoginResult>();
-            await LocalStorage.SetItemAsync("authToken", result.Token);
-            ((ApiAuthenticationStateProvider)AuthStateProvider).NotifyUserAuthentication(result.Token);
-            Navigation.NavigateTo("/");
+            var response = await Http.PostAsJsonAsync("api/auth/login", loginModel);
+            if (response.IsSuccessStatusCode)
+            {
+                var result = await response.Content.ReadFromJsonAsync<LoginResult>();
+                await LocalStorage.SetItemAsync("authToken", result.Token);
+                ((ApiAuthenticationStateProvider)AuthStateProvider).NotifyUserAuthentication(result.Token);
+                Navigation.NavigateTo("/");
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                errorMessage = $"Login failed: {error}";
+            }
         }
-        else
+        catch (Exception ex)
         {
-            var error = await response.Content.ReadAsStringAsync();
-            // Display error message
-            await JSRuntime.InvokeVoidAsync("alert", $"Login failed: {error}");
+            errorMessage = $"An error occurred: {ex.Message}";
+        }
+        finally
+        {
+            isLoading = false;
         }
     }
 
@@ -59,7 +92,4 @@
     {
         public string Token { get; set; }
     }
-
-    [Inject]
-    private IJSRuntime JSRuntime { get; set; }
 }

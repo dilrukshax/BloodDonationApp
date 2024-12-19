@@ -7,10 +7,11 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @using Microsoft.AspNetCore.Components.Forms
 @using System.Security.Claims
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Profile</PageTitle>
 
-<h3>User Profile123</h3>
+<h3>User Profile</h3>
 
 @if (isLoading)
 {
@@ -97,7 +98,7 @@ else if (profile != null)
                         <label>New Password:</label>
                         <InputText @bind-Value="updateModel.NewPassword" type="password" class="form-control" />
                     </div>
-                    <button type="submit" class="btn btn-success">Save Changes</button>
+                    <button type="submit" class="btn btn-success" disabled="@isSaving">Save Changes</button>
                     <button type="button" class="btn btn-secondary ml-2" @onclick="ToggleEditForm">Cancel</button>
                 </EditForm>
             </div>
@@ -147,6 +148,7 @@ else if (profile != null)
     private bool isLoading = true;
     private bool isEditing = false;
     private bool isDeleting = false;
+    private bool isSaving = false;
     private string errorMessage;
     private string successMessage;
     private string updateErrorMessage;
@@ -168,7 +170,6 @@ else if (profile != null)
             if (response.IsSuccessStatusCode)
             {
                 profile = await response.Content.ReadFromJsonAsync<ProfileModel>();
-                // Initialize updateModel with current profile data
                 updateModel = new UpdateProfileModel
                     {
                         Username = profile.Username,
@@ -177,13 +178,11 @@ else if (profile != null)
                         Gender = profile.Gender,
                         PhoneNumber = profile.PhoneNumber,
                         Address = profile.Address,
-                        NewEmail = profile.Email // Optional: prefill with current email
-                        // NewPassword is left null by default
+                        NewEmail = profile.Email
                     };
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
-                // Redirect to login if unauthorized
                 Navigation.NavigateTo("/login");
             }
             else
@@ -194,7 +193,6 @@ else if (profile != null)
         catch (Exception ex)
         {
             errorMessage = "An error occurred while loading the profile.";
-            // Optionally log the exception
         }
         finally
         {
@@ -222,10 +220,10 @@ else if (profile != null)
     {
         updateErrorMessage = null;
         successMessage = null;
+        isSaving = true;
 
         try
         {
-            // Create a copy of the updateModel to manipulate
             var payload = new UpdateProfileModel
                 {
                     Username = updateModel.Username,
@@ -237,7 +235,6 @@ else if (profile != null)
                     NewEmail = updateModel.NewEmail
                 };
 
-            // Only include NewPassword if it's not empty or null
             if (!string.IsNullOrWhiteSpace(updateModel.NewPassword))
             {
                 payload.NewPassword = updateModel.NewPassword;
@@ -249,13 +246,8 @@ else if (profile != null)
                 successMessage = "Profile updated successfully.";
                 await LoadProfile();
                 isEditing = false;
-
-                // If email was changed, update the token if necessary
-                var newEmail = updateModel.NewEmail;
-                if (!string.IsNullOrWhiteSpace(newEmail))
+                if (!string.IsNullOrWhiteSpace(updateModel.NewEmail))
                 {
-                    // Optionally, re-authenticate or update the token
-                    // For simplicity, we'll reload the profile
                     ((ApiAuthenticationStateProvider)AuthStateProvider).NotifyUserAuthentication(await LocalStorage.GetItemAsync<string>("authToken"));
                 }
             }
@@ -267,7 +259,10 @@ else if (profile != null)
         catch (Exception ex)
         {
             updateErrorMessage = "An error occurred while updating the profile.";
-            // Optionally log the exception
+        }
+        finally
+        {
+            isSaving = false;
         }
     }
 
@@ -304,11 +299,7 @@ else if (profile != null)
         catch (Exception ex)
         {
             deleteErrorMessage = "An error occurred while deleting the profile.";
-            // Optionally log the exception
         }
     }
-
-    [Inject]
-    private IJSRuntime JSRuntime { get; set; }
     }
 }
