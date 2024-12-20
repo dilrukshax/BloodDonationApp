@@ -963,7 +963,6 @@ D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\scopedcss\bundl
 D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\scopedcss\projectbundle\BloodDonationClient.bundle.scp.css
 D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\blazor.build.boot-extension.json
 D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\blazor.boot.json
-D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\ehfxp7kn5m-8rbvw3on5j.gz
 D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\cu2b7dz1iv-k027gtyf3l.gz
 D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\tm3rv5xqjm-t1cqhe9u97.gz
 D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\olf6qsf5w1-c2jlpeoesf.gz
@@ -1266,10 +1265,11 @@ D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\BloodDonationCl
 D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\refint\BloodDonationClient.dll
 D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\BloodDonationClient.pdb
 D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\ref\BloodDonationClient.dll
-D:\Project\BloodDonationApp\BloodDonationClient\bin\Debug\net9.0\wwwroot\_framework\BloodDonationClient.xga1br0w2m.pdb
-D:\Project\BloodDonationApp\BloodDonationClient\bin\Debug\net9.0\wwwroot\_framework\BloodDonationClient.87m63gdpl5.wasm
-D:\Project\BloodDonationApp\BloodDonationClient\bin\Debug\net9.0\wwwroot\_framework\BloodDonationClient.xga1br0w2m.pdb.gz
-D:\Project\BloodDonationApp\BloodDonationClient\bin\Debug\net9.0\wwwroot\_framework\BloodDonationClient.87m63gdpl5.wasm.gz
-D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\djl9iu9b1m-87m63gdpl5.gz
-D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\0ifoyb4hs8-xga1br0w2m.gz
-D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\7vd6p97w3w-2oorkqdydf.gz
+D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\ehfxp7kn5m-e7l4r6113s.gz
+D:\Project\BloodDonationApp\BloodDonationClient\bin\Debug\net9.0\wwwroot\_framework\BloodDonationClient.0d9zijha1m.pdb
+D:\Project\BloodDonationApp\BloodDonationClient\bin\Debug\net9.0\wwwroot\_framework\BloodDonationClient.0h02j497xt.wasm
+D:\Project\BloodDonationApp\BloodDonationClient\bin\Debug\net9.0\wwwroot\_framework\BloodDonationClient.0d9zijha1m.pdb.gz
+D:\Project\BloodDonationApp\BloodDonationClient\bin\Debug\net9.0\wwwroot\_framework\BloodDonationClient.0h02j497xt.wasm.gz
+D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\djl9iu9b1m-0h02j497xt.gz
+D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\0ifoyb4hs8-0d9zijha1m.gz
+D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\7vd6p97w3w-mxuptwv5ln.gz

@@ -1,9 +1,9 @@
 ﻿@page "/"
-@code {
-    private string username = "User"; // Initialize the username variable
-    private int totalDonors = 1234;
-    private int totalBloodUnits = 5678;
-}
+@using BloodDonationClient.Models
+@using BloodDonationClient.Services
+@inject EventService EventService
+@inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Blood Donation Home</PageTitle>
 
@@ -11,7 +11,7 @@
     <!-- Hero Section -->
     <div class="row justify-content-center text-center mb-5">
         <div class="col-12 col-md-8">
-            <h1 class="display-4 text-primary mb-3">Welcome, @username!</h1>
+            <h1 class="display-4 text-primary mb-3">Welcome!</h1>
             <p class="lead text-muted">Every drop counts! Join us in saving lives through blood donation.</p>
             <button class="btn btn-danger btn-lg mt-3" @onclick="GoToDonorRegistration">Become a Donor</button>
         </div>
@@ -19,94 +19,181 @@
 
     <!-- Statistics Section -->
     <div class="row justify-content-center my-5">
-        <div class="col-md-5 col-lg-3 mb-4">
-            <div class="card bg-danger text-white shadow-lg">
+        <div class="col-md-4 col-lg-3 mb-4">
+            <div class="card bg-danger text-white shadow-lg stats-card">
                 <div class="card-body text-center">
+                    <i class="bi bi-people-fill display-4 mb-3"></i>
                     <h5 class="card-title">Total Donors</h5>
                     <p class="display-4">@totalDonors</p>
                     <p>Your contribution matters!</p>
                 </div>
             </div>
         </div>
-        <div class="col-md-5 col-lg-3 mb-4">
-            <div class="card bg-success text-white shadow-lg">
+        <div class="col-md-4 col-lg-3 mb-4">
+            <div class="card bg-success text-white shadow-lg stats-card">
                 <div class="card-body text-center">
+                    <i class="bi bi-droplet-fill display-4 mb-3"></i>
                     <h5 class="card-title">Blood Units Donated</h5>
                     <p class="display-4">@totalBloodUnits</p>
                     <p>Helping save lives every day.</p>
                 </div>
             </div>
         </div>
-    </div>
-
-    <!-- Action Section -->
-    <div class="row justify-content-center my-5">
-        <div class="col-12 col-md-6 text-center">
-            <h3 class="text-dark mb-4">How Can You Help?</h3>
-            <p class="lead text-muted mb-4">You can make a real difference today. Register as a donor and help save lives!</p>
-            <div class="btn-group">
-                <button class="btn btn-danger btn-lg" @onclick="GoToDonorRegistration">Register as a Donor</button>
-                <button class="btn btn-success btn-lg" @onclick="ViewDonationNeeds">View Donation Needs</button>
+        <div class="col-md-4 col-lg-3 mb-4">
+            <div class="card bg-info text-white shadow-lg stats-card">
+                <div class="card-body text-center">
+                    <i class="bi bi-heart-fill display-4 mb-3"></i>
+                    <h5 class="card-title">Lives Saved</h5>
+                    <p class="display-4">@livesSaved</p>
+                    <p>Impacting our community.</p>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- About Section -->
-    <div class="row justify-content-center text-center my-5">
-        <div class="col-12 col-md-8">
-            <h3 class="text-primary mb-4">About Blood Donation</h3>
-            <div class="card bg-light shadow-lg border-light mb-4">
-                <div class="card-body">
-                    <h5 class="text-danger">What Are We Doing?</h5>
-                    <p>
-                        Our platform connects donors with hospitals and blood banks to ensure a steady supply of blood. By registering as a donor, you become part of a network of people dedicated to helping others.
-                    </p>
+    <!-- Services Section -->
+    <div class="row justify-content-center my-5">
+        <div class="col-12">
+            <h3 class="text-center text-primary mb-4">Our Services</h3>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card service-card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-calendar-check display-4 text-success mb-3"></i>
+                            <h5 class="card-title">Event Management</h5>
+                            <p class="card-text">Organize and manage blood donation events seamlessly with our platform.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card service-card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-clipboard-data display-4 text-success mb-3"></i>
+                            <h5 class="card-title">Data Analytics</h5>
+                            <p class="card-text">Track and analyze donation data to improve outreach and efficiency.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card service-card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-chat-dots display-4 text-success mb-3"></i>
+                            <h5 class="card-title">Community Engagement</h5>
+                            <p class="card-text">Engage with your community through notifications and updates about donation needs.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="card bg-light shadow-lg border-light mb-4">
-                <div class="card-body">
-                    <h5 class="text-danger">How Does Blood Donation Help?</h5>
-                    <p>
-                        Blood donation plays a critical role in the medical field. Whether it’s helping accident victims, supporting cancer patients, or assisting with surgeries, donated blood is essential. A single donation can save up to three lives.
-                    </p>
+    <!-- How It Works Section -->
+    <div class="row justify-content-center my-5">
+        <div class="col-12">
+            <h3 class="text-center text-primary mb-4">How It Works</h3>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card how-it-works-card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-person-plus display-4 text-warning mb-3"></i>
+                            <h5 class="card-title">Register</h5>
+                            <p class="card-text">Create your donor profile easily through our registration form.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card how-it-works-card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-calendar-check display-4 text-warning mb-3"></i>
+                            <h5 class="card-title">Choose Event</h5>
+                            <p class="card-text">Select from upcoming blood donation events that suit your schedule.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card how-it-works-card shadow-sm h-100">
+                        <div class="card-body text-center">
+                            <i class="bi bi-droplet-half display-4 text-warning mb-3"></i>
+                            <h5 class="card-title">Donate</h5>
+                            <p class="card-text">Attend the event and donate blood to help save lives.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="card bg-light shadow-lg border-light mb-4">
-                <div class="card-body">
-                    <h5 class="text-danger">Benefits of Donating Blood</h5>
-                    <ul class="list-unstyled">
-                        <li><strong>Health Benefits for You:</strong> Donating blood can lower your risk of heart disease and help your body replenish healthy blood cells.</li>
-                        <li><strong>Make a Difference:</strong> Each donation can save up to three lives, offering hope and healing to those in need.</li>
-                        <li><strong>Help Your Community:</strong> Your donation supports local hospitals and blood banks, ensuring that lifesaving blood is always available.</li>
-                    </ul>
+    <!-- Environmental Impact Section -->
+    <div class="row justify-content-center my-5">
+        <div class="col-12">
+            <h3 class="text-center text-primary mb-4">Environmental Impact</h3>
+            <div class="row">
+                <div class="col-md-6 mb-4">
+                    <div class="card environmental-impact-card shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title text-success">Sustainable Practices</h5>
+                            <p class="card-text">
+                                Our blood donation events are organized with sustainability in mind. We utilize eco-friendly materials and minimize waste to ensure that our operations have a positive impact on the environment.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-4">
+                    <div class="card environmental-impact-card shadow-sm h-100">
+                        <div class="card-body">
+                            <h5 class="card-title text-success">Community Health</h5>
+                            <p class="card-text">
+                                By promoting regular blood donations, we contribute to the overall health and resilience of our community. Healthy communities are the backbone of a sustainable environment.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="card bg-light shadow-lg border-light">
-                <div class="card-body">
-                    <h5 class="text-danger">Encouragement to Donate</h5>
-                    <p>
-                        Imagine being the reason someone gets a second chance at life. Blood donation is a simple yet powerful way to make a significant impact. Don’t wait—register today and become a hero!
-                    </p>
-                </div>
+    <!-- Call to Action Section -->
+    <div class="row justify-content-center my-5">
+        <div class="col-12 col-md-8 text-center">
+            <h3 class="text-dark mb-4">Join Us Today!</h3>
+            <p class="lead text-muted mb-4">Your blood donation can make a significant difference. Register now and be a hero in someone's life.</p>
+            <div class="btn-group">
+                <button class="btn btn-danger btn-lg me-2" @onclick="GoToDonorRegistration">
+                    <i class="bi bi-heart-fill me-2"></i> Register as a Donor
+                </button>
+                <button class="btn btn-success btn-lg" @onclick="ViewDonationNeeds">
+                    <i class="bi bi-droplet-fill me-2"></i> View Donation Needs
+                </button>
             </div>
         </div>
     </div>
 </div>
 
 @code {
+    private string username = "User"; // Initialize the username variable
+    private int totalDonors = 1234;
+    private int totalBloodUnits = 5678;
+    private int livesSaved = 2000; // Example additional statistic
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Optionally fetch dynamic data here
+        // For example:
+        // username = await AuthService.GetUsernameAsync();
+        // var stats = await EventService.GetStatisticsAsync();
+        // totalDonors = stats.TotalDonors;
+        // totalBloodUnits = stats.TotalBloodUnits;
+        // livesSaved = stats.LivesSaved;
+    }
+
     // Handler methods for button clicks
     private void GoToDonorRegistration()
     {
-        // Navigate to Donor Registration page
-       
+        Navigation.NavigateTo("/register");
     }
 
     private void ViewDonationNeeds()
     {
-        // Navigate to Donation Needs page
-       
+        Navigation.NavigateTo("/donation-needs");
     }
 }

@@ -1,5 +1,42 @@
+/* =========================
+   :root - CSS Variables
+   ========================= */
+:root {
+    /* Font Family */
+    --font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    /* Colors */
+    --primary-color: #1b6ec2;
+    --primary-hover-color: #1861ac;
+    --secondary-color: #28a745;
+    --secondary-hover-color: #1e7e34;
+    --link-color: #0071c1;
+    --valid-color: #26b050;
+    --invalid-color: red;
+    --error-bg-color: lightyellow;
+    --error-text-color: #FFE500;
+    --hero-bg-color: #007bff;
+    --hero-text-color: #ffffff;
+    --placeholder-color: #6c757d;
+    --placeholder-focus-text-align: start;
+    --placeholder-default-text-align: end;
+    /* Sizing */
+    --border-radius: 0.5rem;
+    --input-padding-left: 2.5rem;
+    --form-icon-size: 1.2rem;
+    --spinner-margin-right: 5px;
+    --btn-min-width: 200px;
+    /* Shadows & Transitions */
+    --box-shadow-default: 0 12px 24px rgba(0, 0, 0, 0.2);
+    --box-shadow-hover: 0 8px 20px rgba(0, 0, 0, 0.1);
+    --transition-speed: 0.3s;
+    --transition-ease: ease-in-out;
+}
+
+/* =========================
+   Base Styles
+   ========================= */
 html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-family: var(--font-family);
 }
 
 h1:focus {
@@ -7,17 +44,27 @@ h1:focus {
 }
 
 a, .btn-link {
-    color: #0071c1;
+    color: var(--link-color);
 }
 
 .btn-primary {
     color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    transition: background-color var(--transition-speed) var(--transition-ease), border-color var(--transition-speed) var(--transition-ease);
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    .btn-primary:hover {
+        background-color: var(--primary-hover-color);
+        border-color: var(--primary-hover-color);
+    }
+
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 .content {
@@ -25,20 +72,28 @@ a, .btn-link {
 }
 
 .valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
+    outline: 1px solid var(--valid-color);
 }
 
 .invalid {
-    outline: 1px solid red;
+    outline: 1px solid var(--invalid-color);
 }
 
 .validation-message {
-    color: red;
+    color: var(--invalid-color);
 }
 
+code {
+    color: #c02d76;
+}
+
+/* =========================
+   Blazor Error UI
+   ========================= */
 #blazor-error-ui {
     color-scheme: light only;
-    background: lightyellow;
+    background: var(--error-bg-color);
+    color: var(--error-text-color);
     bottom: 0;
     box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
     box-sizing: border-box;
@@ -64,9 +119,17 @@ a, .btn-link {
 }
 
     .blazor-error-boundary::after {
-        content: "An error has occurred."
+        content: "An error has occurred.";
     }
 
+#blazor-error-ui {
+    /* Ensures the error UI is hidden by default */
+    display: none;
+}
+
+/* =========================
+   Loading Progress
+   ========================= */
 .loading-progress {
     position: relative;
     display: block;
@@ -84,7 +147,7 @@ a, .btn-link {
     }
 
         .loading-progress circle:last-child {
-            stroke: #1b6ec2;
+            stroke: var(--primary-color);
             stroke-dasharray: calc(3.141 * var(--blazor-load-percentage, 0%) * 0.8), 500%;
             transition: stroke-dasharray 0.05s ease-in-out;
         }
@@ -100,15 +163,239 @@ a, .btn-link {
         content: var(--blazor-load-percentage-text, "Loading");
     }
 
-code {
-    color: #c02d76;
+/* =========================
+   Form Floating Placeholder
+   ========================= */
+.form-floating > .form-control-plaintext::placeholder,
+.form-floating > .form-control::placeholder {
+    color: var(--placeholder-color);
+    text-align: var(--placeholder-default-text-align);
+    font-style: italic;
 }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-    color: var(--bs-secondary-color);
-    text-align: end;
+.form-floating > .form-control-plaintext:focus::placeholder,
+.form-floating > .form-control:focus::placeholder {
+    text-align: var(--placeholder-focus-text-align);
 }
 
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-    text-align: start;
+/* =========================
+   Hero Section
+   ========================= */
+.hero-section,
+.event-hero {
+    background-color: var(--hero-bg-color);
+    color: var(--hero-text-color);
 }
+
+    .hero-section h1,
+    .event-hero h1 {
+        font-weight: 700;
+    }
+
+    .hero-section p.lead,
+    .event-hero p.lead {
+        font-size: 1.25rem;
+    }
+
+@media (max-width: 768px) {
+    .hero-section h1,
+    .event-hero h1 {
+        font-size: 2rem;
+    }
+
+    .hero-section p.lead,
+    .event-hero p.lead {
+        font-size: 1rem;
+    }
+}
+
+/* =========================
+   Search and Filter Section
+   ========================= */
+.search-filter-section input,
+.search-filter-section button {
+    border-radius: 0.25rem;
+}
+
+/* =========================
+   Card Components
+   ========================= */
+
+/* General Card Styles */
+.card {
+    transition: transform var(--transition-speed) var(--transition-ease), box-shadow var(--transition-speed) var(--transition-ease);
+    border: none;
+    border-radius: var(--border-radius);
+}
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: var(--box-shadow-hover);
+    }
+
+/* Event Card Specific Styles */
+.event-card {
+    /* Inherits from .card */
+}
+
+    .event-card:hover {
+        box-shadow: var(--box-shadow-default);
+    }
+
+    .event-card .card-title {
+        font-weight: 600;
+        color: #343a40;
+    }
+
+    .event-card .card-text {
+        color: #6c757d;
+    }
+
+    .event-card .btn-primary {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+        transition: background-color var(--transition-speed) var(--transition-speed), border-color var(--transition-speed) var(--transition-speed);
+    }
+
+        .event-card .btn-primary:hover {
+            background-color: var(--secondary-hover-color);
+            border-color: var(--secondary-hover-color);
+        }
+
+    .event-card .card-header {
+        font-size: 1.25rem;
+    }
+
+    .event-card .list-group-item {
+        border: none;
+        padding: 0.75rem 1.25rem;
+    }
+
+        .event-card .list-group-item i {
+            font-size: 1.2rem;
+        }
+
+    .event-card .btn-secondary {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+/* Statistics, Services, and How It Works Cards */
+.stats-card,
+.service-card,
+.how-it-works-card {
+    /* Inherits from .card */
+}
+
+    .stats-card:hover,
+    .service-card:hover,
+    .how-it-works-card:hover {
+        box-shadow: var(--box-shadow-default);
+    }
+
+    .stats-card i,
+    .service-card i,
+    .how-it-works-card i {
+        font-size: 3rem;
+    }
+
+@media (max-width: 768px) {
+    .stats-card i,
+    .service-card i,
+    .how-it-works-card i,
+    .event-card .list-group-item i {
+        font-size: 2.5rem;
+    }
+
+    .event-card .list-group-item i {
+        font-size: 1rem;
+    }
+}
+
+/* Environmental Impact Card */
+.environmental-impact-card {
+    border: none;
+    border-radius: var(--border-radius);
+}
+
+    .environmental-impact-card h5 {
+        font-weight: 600;
+    }
+
+    .environmental-impact-card p {
+        color: #6c757d;
+    }
+
+/* =========================
+   Call to Action Section
+   ========================= */
+.btn-group .btn {
+    min-width: var(--btn-min-width);
+}
+
+    .btn-group .btn i {
+        font-size: 1.2rem;
+    }
+
+/* =========================
+   Form Icon and Input Padding
+   ========================= */
+.form-icon {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    color: var(--placeholder-color);
+    pointer-events: none;
+    font-size: var(--form-icon-size);
+}
+
+.form-control.ps-4,
+.form-select.ps-4,
+.input-textarea.ps-4 {
+    padding-left: var(--input-padding-left);
+}
+
+/* =========================
+   Spinner Alignment in Buttons
+   ========================= */
+.spinner-border,
+.spinner-border-sm {
+    margin-right: var(--spinner-margin-right);
+}
+
+/* =========================
+   Button Icon Spacing
+   ========================= */
+.btn .bi {
+    margin-right: 5px;
+}
+
+/* =========================
+   Alert Box Transitions
+   ========================= */
+.alert {
+    transition: opacity 0.3s var(--transition-ease);
+}
+
+/* =========================
+   Placeholder Styling
+   ========================= */
+.form-control::placeholder,
+.form-select::placeholder,
+.input-textarea::placeholder {
+    color: var(--placeholder-color);
+    font-style: italic;
+}
+
+/* =========================
+   Responsive Adjustments
+   ========================= */
+@media (max-width: 768px) {
+    /* Hero Sections already handled above */
+
+    /* Additional responsive styles can be added here if needed */
+}
+
+

@@ -11,137 +11,189 @@
 
 <PageTitle>Profile</PageTitle>
 
-<h3>User Profile</h3>
+<div class="container my-5">
+    <h3 class="mb-4 text-center">User Profile</h3>
 
-@if (isLoading)
-{
-    <p><em>Loading...</em></p>
-}
-else if (errorMessage != null)
-{
-    <div class="alert alert-danger">@errorMessage</div>
-}
-else if (profile != null)
-{
-    <div class="card mb-4">
-        <div class="card-header">
-            <h4>@profile.Username's Profile</h4>
-        </div>
-        <div class="card-body">
-            <p><strong>Email:</strong> @profile.Email</p>
-            <p><strong>Blood Type:</strong> @profile.BloodType</p>
-            <p><strong>Date of Birth:</strong> @profile.DateOfBirth.ToShortDateString()</p>
-            <p><strong>Gender:</strong> @profile.Gender</p>
-            <p><strong>Phone Number:</strong> @profile.PhoneNumber</p>
-            <p><strong>Address:</strong> @profile.Address</p>
-        </div>
-    </div>
-
-    <button class="btn btn-primary mb-3" @onclick="ToggleEditForm">Edit Profile</button>
-    <button class="btn btn-danger mb-3" @onclick="ToggleDeleteForm">Delete Profile</button>
-
-    @if (isEditing)
+    @if (isLoading)
     {
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5>Edit Profile</h5>
-            </div>
-            <div class="card-body">
-                <EditForm Model="updateModel" OnValidSubmit="HandleUpdate">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
-
-                    <div class="form-group">
-                        <label>Username:</label>
-                        <InputText @bind-Value="updateModel.Username" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Blood Type:</label>
-                        <InputSelect @bind-Value="updateModel.BloodType" class="form-control">
-                            <option value="">-- Select Blood Type --</option>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="B+">B+</option>
-                            <option value="B-">B-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
-                        </InputSelect>
-                    </div>
-                    <div class="form-group">
-                        <label>Date of Birth:</label>
-                        <InputDate @bind-Value="updateModel.DateOfBirth" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Gender:</label>
-                        <InputSelect @bind-Value="updateModel.Gender" class="form-control">
-                            <option value="">-- Select Gender --</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                        </InputSelect>
-                    </div>
-                    <div class="form-group">
-                        <label>Phone Number:</label>
-                        <InputText @bind-Value="updateModel.PhoneNumber" type="tel" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>Address:</label>
-                        <InputText @bind-Value="updateModel.Address" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>New Email:</label>
-                        <InputText @bind-Value="updateModel.NewEmail" type="email" class="form-control" />
-                    </div>
-                    <div class="form-group">
-                        <label>New Password:</label>
-                        <InputText @bind-Value="updateModel.NewPassword" type="password" class="form-control" />
-                    </div>
-                    <button type="submit" class="btn btn-success" disabled="@isSaving">Save Changes</button>
-                    <button type="button" class="btn btn-secondary ml-2" @onclick="ToggleEditForm">Cancel</button>
-                </EditForm>
+        <div class="d-flex justify-content-center my-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
             </div>
         </div>
     }
-
-    @if (isDeleting)
+    else if (errorMessage != null)
     {
-        <div class="card mb-4">
-            <div class="card-header">
-                <h5>Delete Profile</h5>
-            </div>
-            <div class="card-body">
-                <p>Are you sure you want to delete your profile? This action cannot be undone.</p>
-                <EditForm Model="deleteModel" OnValidSubmit="HandleDelete">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
-
-                    <div class="form-group">
-                        <label>Confirm Password:</label>
-                        <InputText @bind-Value="deleteModel.Password" type="password" class="form-control" />
-                    </div>
-                    <button type="submit" class="btn btn-danger">Delete Profile</button>
-                    <button type="button" class="btn btn-secondary ml-2" @onclick="ToggleDeleteForm">Cancel</button>
-                </EditForm>
-            </div>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @errorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
+    else if (profile != null)
+    {
+        <div class="row">
+            <!-- Profile Information -->
+            <div class="col-lg-6">
+                <div class="card mb-4 shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h4>@profile.Username's Profile</h4>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Email:</strong> @profile.Email</p>
+                        <p><strong>Blood Type:</strong> @profile.BloodType</p>
+                        <p><strong>Date of Birth:</strong> @profile.DateOfBirth.ToString("MMMM dd, yyyy")</p>
+                        <p><strong>Gender:</strong> @profile.Gender</p>
+                        <p><strong>Phone Number:</strong> @profile.PhoneNumber</p>
+                        <p><strong>Address:</strong> @profile.Address</p>
+                    </div>
+                </div>
 
-    @if (successMessage != null)
-    {
-        <div class="alert alert-success">@successMessage</div>
-    }
-    @if (updateErrorMessage != null)
-    {
-        <div class="alert alert-danger">@updateErrorMessage</div>
-    }
-    @if (deleteErrorMessage != null)
-    {
-        <div class="alert alert-danger">@deleteErrorMessage</div>
-    }
+                <!-- Action Buttons -->
+                <div class="d-flex justify-content-start mb-4">
+                    <button class="btn btn-outline-primary me-2" @onclick="ToggleEditForm">
+                        <i class="bi bi-pencil-square"></i> Edit Profile
+                    </button>
+                    <button class="btn btn-outline-danger" @onclick="ToggleDeleteForm">
+                        <i class="bi bi-trash"></i> Delete Profile
+                    </button>
+                </div>
 
-    @code {
+                <!-- Success and Error Messages -->
+                @if (successMessage != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @successMessage
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (updateErrorMessage != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @updateErrorMessage
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (deleteErrorMessage != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @deleteErrorMessage
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+            </div>
+
+            <!-- Edit Profile Form -->
+            @if (isEditing)
+            {
+                <div class="col-lg-6">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header bg-warning text-white">
+                            <h5>Edit Profile</h5>
+                        </div>
+                        <div class="card-body">
+                            <EditForm Model="updateModel" OnValidSubmit="HandleUpdate">
+                                <DataAnnotationsValidator />
+                                <ValidationSummary class="text-danger" />
+
+                                <div class="mb-3">
+                                    <label class="form-label">Username</label>
+                                    <InputText @bind-Value="updateModel.Username" class="form-control" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Blood Type</label>
+                                    <InputSelect @bind-Value="updateModel.BloodType" class="form-select">
+                                        <option value="">-- Select Blood Type --</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </InputSelect>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Date of Birth</label>
+                                    <InputDate @bind-Value="updateModel.DateOfBirth" class="form-control" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Gender</label>
+                                    <InputSelect @bind-Value="updateModel.Gender" class="form-select">
+                                        <option value="">-- Select Gender --</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </InputSelect>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Phone Number</label>
+                                    <InputText @bind-Value="updateModel.PhoneNumber" type="tel" class="form-control" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Address</label>
+                                    <InputText @bind-Value="updateModel.Address" class="form-control" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">New Email</label>
+                                    <InputText @bind-Value="updateModel.NewEmail" type="email" class="form-control" />
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">New Password</label>
+                                    <InputText @bind-Value="updateModel.NewPassword" type="password" class="form-control" />
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-success me-2" disabled="@isSaving">
+                                        @if (isSaving)
+                                        {
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            
+                                        }
+                                        else
+                                        {
+                                            <span>Save Changes</span>
+                                        }
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" @onclick="ToggleEditForm">Cancel</button>
+                                </div>
+                            </EditForm>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <!-- Delete Profile Form -->
+            @if (isDeleting)
+            {
+                <div class="col-lg-6">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header bg-danger text-white">
+                            <h5>Delete Profile</h5>
+                        </div>
+                        <div class="card-body">
+                            <p>Are you sure you want to delete your profile? This action cannot be undone.</p>
+                            <EditForm Model="deleteModel" OnValidSubmit="HandleDelete">
+                                <DataAnnotationsValidator />
+                                <ValidationSummary class="text-danger" />
+
+                                <div class="mb-3">
+                                    <label class="form-label">Confirm Password</label>
+                                    <InputText @bind-Value="deleteModel.Password" type="password" class="form-control" />
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-danger me-2">Delete Profile</button>
+                                    <button type="button" class="btn btn-secondary" @onclick="ToggleDeleteForm">Cancel</button>
+                                </div>
+                            </EditForm>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
     private ProfileModel profile;
     private UpdateProfileModel updateModel = new UpdateProfileModel();
     private DeleteProfileModel deleteModel = new DeleteProfileModel();
@@ -171,15 +223,15 @@ else if (profile != null)
             {
                 profile = await response.Content.ReadFromJsonAsync<ProfileModel>();
                 updateModel = new UpdateProfileModel
-                    {
-                        Username = profile.Username,
-                        BloodType = profile.BloodType,
-                        DateOfBirth = profile.DateOfBirth,
-                        Gender = profile.Gender,
-                        PhoneNumber = profile.PhoneNumber,
-                        Address = profile.Address,
-                        NewEmail = profile.Email
-                    };
+                {
+                    Username = profile.Username,
+                    BloodType = profile.BloodType,
+                    DateOfBirth = profile.DateOfBirth,
+                    Gender = profile.Gender,
+                    PhoneNumber = profile.PhoneNumber,
+                    Address = profile.Address,
+                    NewEmail = profile.Email
+                };
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
@@ -190,7 +242,7 @@ else if (profile != null)
                 errorMessage = await response.Content.ReadAsStringAsync();
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             errorMessage = "An error occurred while loading the profile.";
         }
@@ -225,20 +277,16 @@ else if (profile != null)
         try
         {
             var payload = new UpdateProfileModel
-                {
-                    Username = updateModel.Username,
-                    BloodType = updateModel.BloodType,
-                    DateOfBirth = updateModel.DateOfBirth,
-                    Gender = updateModel.Gender,
-                    PhoneNumber = updateModel.PhoneNumber,
-                    Address = updateModel.Address,
-                    NewEmail = updateModel.NewEmail
-                };
-
-            if (!string.IsNullOrWhiteSpace(updateModel.NewPassword))
             {
-                payload.NewPassword = updateModel.NewPassword;
-            }
+                Username = updateModel.Username,
+                BloodType = updateModel.BloodType,
+                DateOfBirth = updateModel.DateOfBirth,
+                Gender = updateModel.Gender,
+                PhoneNumber = updateModel.PhoneNumber,
+                Address = updateModel.Address,
+                NewEmail = updateModel.NewEmail,
+                NewPassword = updateModel.NewPassword
+            };
 
             var response = await Http.PutAsJsonAsync("api/profile", payload);
             if (response.IsSuccessStatusCode)
@@ -246,9 +294,11 @@ else if (profile != null)
                 successMessage = "Profile updated successfully.";
                 await LoadProfile();
                 isEditing = false;
+
                 if (!string.IsNullOrWhiteSpace(updateModel.NewEmail))
                 {
-                    ((ApiAuthenticationStateProvider)AuthStateProvider).NotifyUserAuthentication(await LocalStorage.GetItemAsync<string>("authToken"));
+                    var token = await LocalStorage.GetItemAsync<string>("authToken");
+                    ((ApiAuthenticationStateProvider)AuthStateProvider).NotifyUserAuthentication(token);
                 }
             }
             else
@@ -256,7 +306,7 @@ else if (profile != null)
                 updateErrorMessage = await response.Content.ReadAsStringAsync();
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             updateErrorMessage = "An error occurred while updating the profile.";
         }
@@ -280,9 +330,9 @@ else if (profile != null)
         try
         {
             var response = await Http.SendAsync(new HttpRequestMessage(HttpMethod.Delete, "api/profile")
-                {
-                    Content = JsonContent.Create(deleteModel)
-                });
+            {
+                Content = JsonContent.Create(deleteModel)
+            });
 
             if (response.IsSuccessStatusCode)
             {
@@ -296,10 +346,9 @@ else if (profile != null)
                 deleteErrorMessage = await response.Content.ReadAsStringAsync();
             }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             deleteErrorMessage = "An error occurred while deleting the profile.";
         }
-    }
     }
 }

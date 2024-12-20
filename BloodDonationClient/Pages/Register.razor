@@ -7,107 +7,136 @@
 @inject ILocalStorageService LocalStorage
 @inject IJSRuntime JSRuntime
 
-<h3>Register</h3>
+<PageTitle>Register</PageTitle>
 
-@if (isSuccess)
-{
-    <div class="alert alert-success" role="alert">
-        Registration successful! A welcome email has been sent to your email address.
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Register</h3>
+
+                    @if (isSuccess)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            Registration successful! A welcome email has been sent to your email address.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    else
+                    {
+                        <EditForm Model="registerModel" OnValidSubmit="HandleRegistration">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary class="text-danger mb-3" />
+
+                            <div class="mb-3 position-relative">
+                                <label for="username" class="form-label">Username:</label>
+                                <InputText id="username" @bind-Value="registerModel.Username" class="form-control ps-4" placeholder="Enter your username" />
+                                <i class="bi bi-person-fill form-icon"></i>
+                                <ValidationMessage For="@(() => registerModel.Username)" />
+                            </div>
+
+                            <div class="mb-3 position-relative">
+                                <label for="email" class="form-label">Email:</label>
+                                <InputText id="email" @bind-Value="registerModel.Email" type="email" class="form-control ps-4" placeholder="Enter your email" />
+                                <i class="bi bi-envelope-fill form-icon"></i>
+                                <ValidationMessage For="@(() => registerModel.Email)" />
+                            </div>
+
+                            <div class="mb-3 position-relative">
+                                <label for="password" class="form-label">Password:</label>
+                                <InputText id="password" @bind-Value="registerModel.Password" type="password" class="form-control ps-4" placeholder="Enter your password" />
+                                <i class="bi bi-lock-fill form-icon"></i>
+                                <ValidationMessage For="@(() => registerModel.Password)" />
+                            </div>
+
+                            <div class="mb-4 position-relative">
+                                <label for="confirmPassword" class="form-label">Confirm Password:</label>
+                                <InputText id="confirmPassword" @bind-Value="registerModel.ConfirmPassword" type="password" class="form-control ps-4" placeholder="Confirm your password" />
+                                <i class="bi bi-lock-fill form-icon"></i>
+                                <ValidationMessage For="@(() => registerModel.ConfirmPassword)" />
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3 position-relative">
+                                    <label for="bloodType" class="form-label">Blood Type:</label>
+                                    <InputSelect id="bloodType" @bind-Value="registerModel.BloodType" class="form-select ps-4">
+                                        <option value="">-- Select Blood Type --</option>
+                                        <option value="A+">A+</option>
+                                        <option value="A-">A-</option>
+                                        <option value="B+">B+</option>
+                                        <option value="B-">B-</option>
+                                        <option value="AB+">AB+</option>
+                                        <option value="AB-">AB-</option>
+                                        <option value="O+">O+</option>
+                                        <option value="O-">O-</option>
+                                    </InputSelect>
+                                    <i class="bi bi-droplet-fill form-icon"></i>
+                                    <ValidationMessage For="@(() => registerModel.BloodType)" />
+                                </div>
+                                <div class="col-md-4 mb-3 position-relative">
+                                    <label for="dob" class="form-label">Date of Birth:</label>
+                                    <InputDate id="dob" @bind-Value="registerModel.DateOfBirth" class="form-control ps-4" />
+                                    <i class="bi bi-calendar-fill form-icon"></i>
+                                    <ValidationMessage For="@(() => registerModel.DateOfBirth)" />
+                                </div>
+                                <div class="col-md-4 mb-3 position-relative">
+                                    <label for="gender" class="form-label">Gender:</label>
+                                    <InputSelect id="gender" @bind-Value="registerModel.Gender" class="form-select ps-4">
+                                        <option value="">-- Select Gender --</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                        <option value="Other">Other</option>
+                                    </InputSelect>
+                                    <i class="bi bi-gender-ambiguous form-icon"></i>
+                                    <ValidationMessage For="@(() => registerModel.Gender)" />
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3 position-relative">
+                                    <label for="phone" class="form-label">Phone Number:</label>
+                                    <InputText id="phone" @bind-Value="registerModel.PhoneNumber" type="tel" class="form-control ps-4" placeholder="Enter your phone number" />
+                                    <i class="bi bi-telephone-fill form-icon"></i>
+                                    <ValidationMessage For="@(() => registerModel.PhoneNumber)" />
+                                </div>
+                                <div class="col-md-6 mb-3 position-relative">
+                                    <label for="address" class="form-label">Address:</label>
+                                    <InputText id="address" @bind-Value="registerModel.Address" class="form-control ps-4" placeholder="Enter your address" />
+                                    <i class="bi bi-house-fill form-icon"></i>
+                                    <ValidationMessage For="@(() => registerModel.Address)" />
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary w-100" disabled="@isSubmitting">
+                                @if (isSubmitting)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                    
+                                }
+                                else
+                                {
+                                    <span>Register</span>
+                                }
+                            </button>
+                        </EditForm>
+
+                        @if (!string.IsNullOrEmpty(errorMessage))
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
+                                @errorMessage
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <p>Already have an account? <a href="/login" class="text-decoration-none"><strong>Login here</strong></a></p>
+            </div>
+        </div>
     </div>
-}
-else
-{
-    <EditForm Model="registerModel" OnValidSubmit="HandleRegistration">
-        <DataAnnotationsValidator />
-        <ValidationSummary />
-
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="username">Username:</label>
-                <InputText id="username" @bind-Value="registerModel.Username" class="form-control" />
-                <ValidationMessage For="@(() => registerModel.Username)" />
-            </div>
-            <div class="form-group col-md-6">
-                <label for="email">Email:</label>
-                <InputText id="email" @bind-Value="registerModel.Email" type="email" class="form-control" />
-                <ValidationMessage For="@(() => registerModel.Email)" />
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <InputText id="password" @bind-Value="registerModel.Password" type="password" class="form-control" />
-            <ValidationMessage For="@(() => registerModel.Password)" />
-        </div>
-
-        <div class="form-group">
-            <label for="confirmPassword">Confirm Password:</label>
-            <InputText id="confirmPassword" @bind-Value="registerModel.ConfirmPassword" type="password" class="form-control" />
-            <ValidationMessage For="@(() => registerModel.ConfirmPassword)" />
-        </div>
-
-        <div class="form-row">
-            <div class="form-group col-md-4">
-                <label for="bloodType">Blood Type:</label>
-                <InputSelect id="bloodType" @bind-Value="registerModel.BloodType" class="form-control">
-                    <option value="">-- Select Blood Type --</option>
-                    <option value="A+">A+</option>
-                    <option value="A-">A-</option>
-                    <option value="B+">B+</option>
-                    <option value="B-">B-</option>
-                    <option value="AB+">AB+</option>
-                    <option value="AB-">AB-</option>
-                    <option value="O+">O+</option>
-                    <option value="O-">O-</option>
-                </InputSelect>
-                <ValidationMessage For="@(() => registerModel.BloodType)" />
-            </div>
-            <div class="form-group col-md-4">
-                <label for="dob">Date of Birth:</label>
-                <InputDate id="dob" @bind-Value="registerModel.DateOfBirth" class="form-control" />
-                <ValidationMessage For="@(() => registerModel.DateOfBirth)" />
-            </div>
-            <div class="form-group col-md-4">
-                <label for="gender">Gender:</label>
-                <InputSelect id="gender" @bind-Value="registerModel.Gender" class="form-control">
-                    <option value="">-- Select Gender --</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </InputSelect>
-                <ValidationMessage For="@(() => registerModel.Gender)" />
-            </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-group col-md-6">
-                <label for="phone">Phone Number:</label>
-                <InputText id="phone" @bind-Value="registerModel.PhoneNumber" type="tel" class="form-control" />
-                <ValidationMessage For="@(() => registerModel.PhoneNumber)" />
-            </div>
-            <div class="form-group col-md-6">
-                <label for="address">Address:</label>
-                <InputText id="address" @bind-Value="registerModel.Address" class="form-control" />
-                <ValidationMessage For="@(() => registerModel.Address)" />
-            </div>
-        </div>
-
-        <button type="submit" class="btn btn-primary mt-3" disabled="@isSubmitting">
-            @if (isSubmitting)
-            {
-                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-            }
-            Register
-        </button>
-    </EditForm>
-
-    @if (!string.IsNullOrEmpty(errorMessage))
-    {
-        <div class="alert alert-danger mt-3" role="alert">
-            @errorMessage
-        </div>
-    }
-}
+</div>
 
 @code {
     private RegisterModel registerModel = new RegisterModel();
@@ -128,55 +157,69 @@ else
             return;
         }
 
-        var response = await Http.PostAsJsonAsync("api/auth/register", registerModel);
-        if (response.IsSuccessStatusCode)
+        try
         {
-            isSuccess = true;
-            registerModel = new RegisterModel(); // Reset form on success
-            await Task.Delay(3000); // Wait for 3 seconds
-            Navigation.NavigateTo("/login");
+            var response = await Http.PostAsJsonAsync("api/auth/register", registerModel);
+            if (response.IsSuccessStatusCode)
+            {
+                isSuccess = true;
+                registerModel = new RegisterModel(); // Reset form on success
+                                                     // Optionally, you can wait and redirect
+                await Task.Delay(3000); // Wait for 3 seconds
+                Navigation.NavigateTo("/login");
+            }
+            else
+            {
+                var error = await response.Content.ReadAsStringAsync();
+                errorMessage = $"Registration failed: {error}";
+            }
         }
-        else
+        catch (Exception ex)
         {
-            errorMessage = await response.Content.ReadAsStringAsync();
+            errorMessage = $"An error occurred: {ex.Message}";
         }
-
-        isSubmitting = false;
+        finally
+        {
+            isSubmitting = false;
+        }
     }
 
     public class RegisterModel
     {
-        [Required]
-        [StringLength(50)]
+        [Required(ErrorMessage = "Username is required.")]
+        [StringLength(50, ErrorMessage = "Username cannot exceed 50 characters.")]
         public string Username { get; set; }
 
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string Email { get; set; }
 
-        [Required]
-        [MinLength(6)]
+        [Required(ErrorMessage = "Password is required.")]
+        [MinLength(6, ErrorMessage = "Password must be at least 6 characters long.")]
         public string Password { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Confirm Password is required.")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
 
-        [Required]
-        [StringLength(3)]
+        [Required(ErrorMessage = "Blood Type is required.")]
+        [StringLength(3, ErrorMessage = "Invalid Blood Type.")]
         public string BloodType { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Date of Birth is required.")]
+        [DataType(DataType.Date)]
         public DateTime DateOfBirth { get; set; }
 
-        [Required]
-        [StringLength(10)]
+        [Required(ErrorMessage = "Gender is required.")]
+        [StringLength(10, ErrorMessage = "Invalid Gender.")]
         public string Gender { get; set; }
 
-        [Required]
-        [Phone]
+        [Required(ErrorMessage = "Phone Number is required.")]
+        [Phone(ErrorMessage = "Invalid phone number.")]
         public string PhoneNumber { get; set; }
 
+        [Required(ErrorMessage = "Address is required.")]
+        [StringLength(200, ErrorMessage = "Address cannot exceed 200 characters.")]
         public string Address { get; set; }
     }
 }

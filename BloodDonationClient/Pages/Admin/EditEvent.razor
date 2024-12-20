@@ -4,72 +4,114 @@
 @using Microsoft.AspNetCore.Components.Forms
 @inject EventService EventService
 @inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Admin - Edit Event</PageTitle>
 
 <div class="container my-5">
-    <h3 class="text-primary">Edit Blood Donation Event</h3>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4 text-primary">Edit Blood Donation Event</h3>
 
-    @if (isLoading)
-    {
-        <p><em>Loading event details...</em></p>
-    }
-    else if (!string.IsNullOrEmpty(errorMessage))
-    {
-        <div class="alert alert-danger">@errorMessage</div>
-    }
-    else if (eventDetail != null)
-    {
-        <EditForm Model="eventUpdateDto" OnValidSubmit="HandleValidSubmit">
-            <DataAnnotationsValidator />
-            <ValidationSummary />
+                    @if (isLoading)
+                    {
+                        <div class="d-flex justify-content-center my-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading event details...</span>
+                            </div>
+                        </div>
+                    }
+                    else if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @errorMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    else if (eventDetail != null)
+                    {
+                        @if (!string.IsNullOrEmpty(successMessage))
+                        {
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                @successMessage
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
 
-            <!-- Event Title -->
-            <div class="form-group">
-                <label for="title">Event Title:</label>
-                <InputText id="title" @bind-Value="eventUpdateDto.Title" class="form-control" placeholder="Enter event title" />
+                        @if (!string.IsNullOrEmpty(updateErrorMessage))
+                        {
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                @updateErrorMessage
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                        }
+
+                        <EditForm Model="eventUpdateDto" OnValidSubmit="HandleValidSubmit">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary class="text-danger mb-3" />
+
+                            <!-- Event Title -->
+                            <div class="mb-3 position-relative">
+                                <label for="title" class="form-label">Event Title:</label>
+                                <InputText id="title" @bind-Value="eventUpdateDto.Title" class="form-control ps-4" placeholder="Enter event title" />
+                                <i class="bi bi-card-text form-icon"></i>
+                                <ValidationMessage For="@(() => eventUpdateDto.Title)" />
+                            </div>
+
+                            <!-- Event Description -->
+                            <div class="mb-3 position-relative">
+                                <label for="description" class="form-label">Event Description:</label>
+                                <InputTextArea id="description" @bind-Value="eventUpdateDto.Description" class="form-control ps-4" placeholder="Enter event description" rows="4" />
+                                <i class="bi bi-file-earmark-text form-icon"></i>
+                                <ValidationMessage For="@(() => eventUpdateDto.Description)" />
+                            </div>
+
+                            <!-- Event Date -->
+                            <div class="mb-3 position-relative">
+                                <label for="eventDate" class="form-label">Event Date:</label>
+                                <InputDate id="eventDate" @bind-Value="eventUpdateDto.EventDate" class="form-control ps-4" />
+                                <i class="bi bi-calendar-event-fill form-icon"></i>
+                                <ValidationMessage For="@(() => eventUpdateDto.EventDate)" />
+                            </div>
+
+                            <!-- Event Location -->
+                            <div class="mb-4 position-relative">
+                                <label for="location" class="form-label">Event Location:</label>
+                                <InputText id="location" @bind-Value="eventUpdateDto.Location" class="form-control ps-4" placeholder="Enter event location" />
+                                <i class="bi bi-geo-alt-fill form-icon"></i>
+                                <ValidationMessage For="@(() => eventUpdateDto.Location)" />
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-primary" disabled="@isSubmitting">
+                                    @if (isSubmitting)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        
+                                    }
+                                    else
+                                    {
+                                        <span>Save Changes</span>
+                                    }
+                                </button>
+                                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+                            </div>
+                        </EditForm>
+                    }
+                    else
+                    {
+                        <p class="text-center">Event not found.</p>
+                    }
+                </div>
             </div>
-
-            <!-- Event Description -->
-            <div class="form-group">
-                <label for="description">Event Description:</label>
-                <InputTextArea id="description" @bind-Value="eventUpdateDto.Description" class="form-control" placeholder="Enter event description" rows="3" />
+            <div class="text-center mt-3">
+                <p><a href="/admin/events" class="text-decoration-none"><strong>Back to Events Management</strong></a></p>
             </div>
-
-            <!-- Event Date -->
-            <div class="form-group">
-                <label for="eventDate">Event Date:</label>
-                <InputDate id="eventDate" @bind-Value="eventUpdateDto.EventDate" class="form-control" />
-            </div>
-
-            <!-- Event Location -->
-            <div class="form-group">
-                <label for="location">Event Location:</label>
-                <InputText id="location" @bind-Value="eventUpdateDto.Location" class="form-control" placeholder="Enter event location" />
-            </div>
-
-            <!-- Action Buttons -->
-            <div class="form-group mt-4">
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-                <button type="button" class="btn btn-secondary ml-2" @onclick="Cancel">Cancel</button>
-            </div>
-        </EditForm>
-
-        <!-- Success and Error Messages -->
-        @if (!string.IsNullOrEmpty(successMessage))
-        {
-            <div class="alert alert-success mt-3">@successMessage</div>
-        }
-
-        @if (!string.IsNullOrEmpty(updateErrorMessage))
-        {
-            <div class="alert alert-danger mt-3">@updateErrorMessage</div>
-        }
-    }
-    else
-    {
-        <p>Event not found.</p>
-    }
+        </div>
+    </div>
 </div>
 
 @code {
@@ -82,6 +124,7 @@
     private string errorMessage;
     private string successMessage;
     private string updateErrorMessage;
+    private bool isSubmitting = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -96,14 +139,21 @@
         try
         {
             eventDetail = await EventService.GetEventByIdAsync(EventId);
-            // Initialize the update DTO with existing event details
-            eventUpdateDto = new EventUpdateDto
-                {
-                    Title = eventDetail.Title,
-                    Description = eventDetail.Description,
-                    EventDate = eventDetail.EventDate,
-                    Location = eventDetail.Location
-                };
+            if (eventDetail != null)
+            {
+                // Initialize the update DTO with existing event details
+                eventUpdateDto = new EventUpdateDto
+                    {
+                        Title = eventDetail.Title,
+                        Description = eventDetail.Description,
+                        EventDate = eventDetail.EventDate,
+                        Location = eventDetail.Location
+                    };
+            }
+            else
+            {
+                errorMessage = "Event not found.";
+            }
         }
         catch (Exception ex)
         {
@@ -118,6 +168,7 @@
 
     private async Task HandleValidSubmit()
     {
+        isSubmitting = true;
         updateErrorMessage = string.Empty;
         successMessage = string.Empty;
 
@@ -127,18 +178,23 @@
             if (success)
             {
                 successMessage = "Event updated successfully.";
-                // Optionally, navigate back to the events list
+                // Optionally, redirect back to events list after a short delay
+                await Task.Delay(2000);
                 Navigation.NavigateTo("/admin/events");
             }
             else
             {
-                updateErrorMessage = "Failed to update the event.";
+                updateErrorMessage = "Failed to update the event. Please try again.";
             }
         }
         catch (Exception ex)
         {
             updateErrorMessage = "An error occurred while updating the event.";
             // Optionally log the exception
+        }
+        finally
+        {
+            isSubmitting = false;
         }
     }
 

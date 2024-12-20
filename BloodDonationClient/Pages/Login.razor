@@ -8,39 +8,62 @@
 @inject AuthenticationStateProvider AuthStateProvider
 @inject IJSRuntime JSRuntime
 
-<h3>Login</h3>
+<PageTitle>Login</PageTitle>
 
-<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4">Login</h3>
 
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <InputText id="email" @bind-Value="loginModel.Email" type="email" class="form-control" />
-        <ValidationMessage For="@(() => loginModel.Email)" />
-    </div>
-    <div class="form-group">
-        <label for="password">Password:</label>
-        <InputText id="password" @bind-Value="loginModel.Password" type="password" class="form-control" />
-        <ValidationMessage For="@(() => loginModel.Password)" />
-    </div>
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @errorMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
 
-    <button type="submit" class="btn btn-primary" disabled="@isLoading">Login</button>
-</EditForm>
+                    <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="text-danger mb-3" />
 
-@if (isLoading)
-{
-    <div class="text-center">
-        <div class="spinner-border text-primary" role="status">
-            <span class="sr-only">Loading...</span>
+                        <div class="mb-3 position-relative">
+                            <label for="email" class="form-label">Email:</label>
+                            <InputText id="email" @bind-Value="loginModel.Email" type="email" class="form-control ps-4" placeholder="Enter your email" />
+                            <i class="bi bi-envelope-fill form-icon"></i>
+                            <ValidationMessage For="@(() => loginModel.Email)" />
+                        </div>
+
+                        <div class="mb-4 position-relative">
+                            <label for="password" class="form-label">Password:</label>
+                            <InputText id="password" @bind-Value="loginModel.Password" type="password" class="form-control ps-4" placeholder="Enter your password" />
+                            <i class="bi bi-lock-fill form-icon"></i>
+                            <ValidationMessage For="@(() => loginModel.Password)" />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100" disabled="@isLoading">
+                            @if (isLoading)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                
+                            }
+                            else
+                            {
+                                <span>Login</span>
+                            }
+                        </button>
+                    </EditForm>
+
+                    <div class="text-center mt-3">
+                        <a href="/register" class="text-decoration-none">Don't have an account? <strong>Register</strong></a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-}
-
-@if (!string.IsNullOrEmpty(errorMessage))
-{
-    <div class="alert alert-danger mt-3">@errorMessage</div>
-}
+</div>
 
 @code {
     private LoginModel loginModel = new LoginModel();
@@ -80,11 +103,11 @@
 
     public class LoginModel
     {
-        [Required]
-        [EmailAddress]
+        [Required(ErrorMessage = "Email is required.")]
+        [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Password is required.")]
         public string Password { get; set; }
     }
 

@@ -5,123 +5,184 @@
 @using Microsoft.AspNetCore.Components.Forms
 @inject AdminService AdminService
 @inject NavigationManager Navigation
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Admin - Edit User</PageTitle>
 
 <AuthorizeView Roles="admin">
     <Authorized Context="authContext">
         <div class="container my-5">
-            <h3 class="text-primary">Edit User Details</h3>
+            <div class="row justify-content-center">
+                <div class="col-md-8 col-lg-7">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h3 class="card-title text-center mb-4 text-primary">Edit User Details</h3>
 
-            @if (isLoading)
-            {
-                <p><em>Loading user details...</em></p>
-            }
-            else if (!string.IsNullOrEmpty(errorMessage))
-            {
-                <div class="alert alert-danger">@errorMessage</div>
-            }
-            else if (user != null)
-            {
-                <EditForm Model="updateModel" OnValidSubmit="HandleValidSubmit">
-                    <DataAnnotationsValidator />
-                    <ValidationSummary />
+                            @if (isLoading)
+                            {
+                                <div class="d-flex justify-content-center my-5">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Loading user details...</span>
+                                    </div>
+                                </div>
+                            }
+                            else if (!string.IsNullOrEmpty(errorMessage))
+                            {
+                                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                    @errorMessage
+                                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                </div>
+                            }
+                            else if (user != null)
+                            {
+                                @if (!string.IsNullOrEmpty(successMessage))
+                                {
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        @successMessage
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                }
 
-                    <!-- Username -->
-                    <div class="form-group">
-                        <label for="username">Username:</label>
-                        <InputText @bind-Value="updateModel.Username" id="username" class="form-control" />
+                                @if (!string.IsNullOrEmpty(updateErrorMessage))
+                                {
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        @updateErrorMessage
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                }
+
+                                <EditForm Model="updateModel" OnValidSubmit="HandleValidSubmit">
+                                    <DataAnnotationsValidator />
+                                    <ValidationSummary class="text-danger mb-3" />
+
+                                    <!-- Username -->
+                                    <div class="mb-3 position-relative">
+                                        <label for="username" class="form-label">Username:</label>
+                                        <InputText id="username" @bind-Value="updateModel.Username" class="form-control ps-4" placeholder="Enter username" />
+                                        <i class="bi bi-person-fill form-icon"></i>
+                                        <ValidationMessage For="@(() => updateModel.Username)" />
+                                    </div>
+
+                                    <!-- Email -->
+                                    <div class="mb-3 position-relative">
+                                        <label for="email" class="form-label">Email:</label>
+                                        <InputText id="email" @bind-Value="updateModel.Email" type="email" class="form-control ps-4" placeholder="Enter email address" />
+                                        <i class="bi bi-envelope-fill form-icon"></i>
+                                        <ValidationMessage For="@(() => updateModel.Email)" />
+                                    </div>
+
+                                    <!-- Blood Type -->
+                                    <div class="mb-3 position-relative">
+                                        <label for="bloodType" class="form-label">Blood Type:</label>
+                                        <InputSelect id="bloodType" @bind-Value="updateModel.BloodType" class="form-select ps-4">
+                                            <option value="">-- Select Blood Type --</option>
+                                            <option value="A+">A+</option>
+                                            <option value="A-">A-</option>
+                                            <option value="B+">B+</option>
+                                            <option value="B-">B-</option>
+                                            <option value="AB+">AB+</option>
+                                            <option value="AB-">AB-</option>
+                                            <option value="O+">O+</option>
+                                            <option value="O-">O-</option>
+                                        </InputSelect>
+                                        <i class="bi bi-droplet-fill form-icon"></i>
+                                        <ValidationMessage For="@(() => updateModel.BloodType)" />
+                                    </div>
+
+                                    <!-- Date of Birth -->
+                                    <div class="mb-3 position-relative">
+                                        <label for="dateOfBirth" class="form-label">Date of Birth:</label>
+                                        <InputDate id="dateOfBirth" @bind-Value="updateModel.DateOfBirth" class="form-control ps-4" />
+                                        <i class="bi bi-calendar-fill form-icon"></i>
+                                        <ValidationMessage For="@(() => updateModel.DateOfBirth)" />
+                                    </div>
+
+                                    <!-- Gender -->
+                                    <div class="mb-3 position-relative">
+                                        <label for="gender" class="form-label">Gender:</label>
+                                        <InputSelect id="gender" @bind-Value="updateModel.Gender" class="form-select ps-4">
+                                            <option value="">-- Select Gender --</option>
+                                            <option value="Male">Male</option>
+                                            <option value="Female">Female</option>
+                                            <option value="Other">Other</option>
+                                        </InputSelect>
+                                        <i class="bi bi-gender-ambiguous form-icon"></i>
+                                        <ValidationMessage For="@(() => updateModel.Gender)" />
+                                    </div>
+
+                                    <!-- Phone Number -->
+                                    <div class="mb-3 position-relative">
+                                        <label for="phoneNumber" class="form-label">Phone Number:</label>
+                                        <InputText id="phoneNumber" @bind-Value="updateModel.PhoneNumber" type="tel" class="form-control ps-4" placeholder="Enter phone number" />
+                                        <i class="bi bi-telephone-fill form-icon"></i>
+                                        <ValidationMessage For="@(() => updateModel.PhoneNumber)" />
+                                    </div>
+
+                                    <!-- Address -->
+                                    <div class="mb-3 position-relative">
+                                        <label for="address" class="form-label">Address:</label>
+                                        <InputText id="address" @bind-Value="updateModel.Address" class="form-control ps-4" placeholder="Enter address" />
+                                        <i class="bi bi-house-fill form-icon"></i>
+                                        <ValidationMessage For="@(() => updateModel.Address)" />
+                                    </div>
+
+                                    <!-- Role -->
+                                    <div class="mb-4 position-relative">
+                                        <label for="role" class="form-label">Role:</label>
+                                        <InputSelect id="role" @bind-Value="updateModel.Role" class="form-select ps-4">
+                                            <option value="user">User</option>
+                                            <option value="admin">Admin</option>
+                                        </InputSelect>
+                                        <i class="bi bi-shield-fill-check form-icon"></i>
+                                        <ValidationMessage For="@(() => updateModel.Role)" />
+                                    </div>
+
+                                    <!-- New Password -->
+                                    <div class="mb-4 position-relative">
+                                        <label for="newPassword" class="form-label">New Password:</label>
+                                        <InputText id="newPassword" @bind-Value="updateModel.NewPassword" type="password" class="form-control ps-4" placeholder="Enter new password (optional)" />
+                                        <i class="bi bi-lock-fill form-icon"></i>
+                                        <ValidationMessage For="@(() => updateModel.NewPassword)" />
+                                    </div>
+
+                                    <!-- Action Buttons -->
+                                    <div class="d-flex justify-content-between">
+                                        <button type="submit" class="btn btn-success" disabled="@isSubmitting">
+                                            @if (isSubmitting)
+                                            {
+                                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                               
+                                            }
+                                            else
+                                            {
+                                                <span>Save Changes</span>
+                                            }
+                                        </button>
+                                        <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+                                    </div>
+                                </EditForm>
+                            }
+                            else
+                            {
+                                <p class="text-center">User not found.</p>
+                            }
+                        </div>
                     </div>
-
-                    <!-- Email -->
-                    <div class="form-group">
-                        <label for="email">Email:</label>
-                        <InputText @bind-Value="updateModel.Email" id="email" type="email" class="form-control" />
+                    <div class="text-center mt-3">
+                        <p><a href="/admin/users" class="text-decoration-none"><strong>Back to Users Management</strong></a></p>
                     </div>
-
-                    <!-- Blood Type -->
-                    <div class="form-group">
-                        <label for="bloodType">Blood Type:</label>
-                        <InputSelect @bind-Value="updateModel.BloodType" id="bloodType" class="form-control">
-                            <option value="">-- Select Blood Type --</option>
-                            <option value="A+">A+</option>
-                            <option value="A-">A-</option>
-                            <option value="B+">B+</option>
-                            <option value="B-">B-</option>
-                            <option value="AB+">AB+</option>
-                            <option value="AB-">AB-</option>
-                            <option value="O+">O+</option>
-                            <option value="O-">O-</option>
-                        </InputSelect>
-                    </div>
-
-                    <!-- Date of Birth -->
-                    <div class="form-group">
-                        <label for="dateOfBirth">Date of Birth:</label>
-                        <InputDate @bind-Value="updateModel.DateOfBirth" id="dateOfBirth" class="form-control" />
-                    </div>
-
-                    <!-- Gender -->
-                    <div class="form-group">
-                        <label for="gender">Gender:</label>
-                        <InputSelect @bind-Value="updateModel.Gender" id="gender" class="form-control">
-                            <option value="">-- Select Gender --</option>
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                        </InputSelect>
-                    </div>
-
-                    <!-- Phone Number -->
-                    <div class="form-group">
-                        <label for="phoneNumber">Phone Number:</label>
-                        <InputText @bind-Value="updateModel.PhoneNumber" id="phoneNumber" type="tel" class="form-control" />
-                    </div>
-
-                    <!-- Address -->
-                    <div class="form-group">
-                        <label for="address">Address:</label>
-                        <InputText @bind-Value="updateModel.Address" id="address" class="form-control" />
-                    </div>
-
-                    <!-- Role -->
-                    <div class="form-group">
-                        <label for="role">Role:</label>
-                        <InputSelect @bind-Value="updateModel.Role" id="role" class="form-control">
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                        </InputSelect>
-                    </div>
-
-                    <!-- New Password -->
-                    <div class="form-group">
-                        <label for="newPassword">New Password:</label>
-                        <InputText @bind-Value="updateModel.NewPassword" id="newPassword" type="password" class="form-control" />
-                    </div>
-
-                    <!-- Submit and Cancel Buttons -->
-                    <div class="form-group mt-3">
-                        <button type="submit" class="btn btn-success">Save Changes</button>
-                        <button type="button" class="btn btn-secondary ml-2" @onclick="Cancel">Cancel</button>
-                    </div>
-                </EditForm>
-
-                @if (!string.IsNullOrEmpty(successMessage))
-                {
-                    <div class="alert alert-success mt-3">@successMessage</div>
-                }
-
-                @if (!string.IsNullOrEmpty(updateErrorMessage))
-                {
-                    <div class="alert alert-danger mt-3">@updateErrorMessage</div>
-                }
-            }
+                </div>
+            </div>
         </div>
     </Authorized>
     <NotAuthorized>
         <div class="container my-5">
-            <h3 class="text-danger">Access Denied</h3>
-            <p>You do not have permission to view this page.</p>
+            <div class="alert alert-danger" role="alert">
+                <h4 class="alert-heading">Access Denied</h4>
+                <p>You do not have permission to view this page.</p>
+                <hr />
+                <p class="mb-0"><a href="/" class="alert-link">Return to Home</a></p>
+            </div>
         </div>
     </NotAuthorized>
 </AuthorizeView>
@@ -136,6 +197,7 @@
     private string errorMessage;
     private string successMessage;
     private string updateErrorMessage;
+    private bool isSubmitting = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -150,19 +212,26 @@
         try
         {
             user = await AdminService.GetUserByIdAsync(UserId);
-            // Initialize updateModel with current user data
-            updateModel = new UpdateUserDto
-                {
-                    Username = user.Username,
-                    Email = user.Email,
-                    BloodType = user.BloodType,
-                    DateOfBirth = user.DateOfBirth,
-                    Gender = user.Gender,
-                    PhoneNumber = user.PhoneNumber,
-                    Address = user.Address,
-                    Role = user.Role
-                    // NewPassword is left null by default
-                };
+            if (user != null)
+            {
+                // Initialize the update DTO with existing user details
+                updateModel = new UpdateUserDto
+                    {
+                        Username = user.Username,
+                        Email = user.Email,
+                        BloodType = user.BloodType,
+                        DateOfBirth = user.DateOfBirth,
+                        Gender = user.Gender,
+                        PhoneNumber = user.PhoneNumber,
+                        Address = user.Address,
+                        Role = user.Role
+                        // NewPassword is optional and left null by default
+                    };
+            }
+            else
+            {
+                errorMessage = "User not found.";
+            }
         }
         catch (Exception ex)
         {
@@ -177,6 +246,7 @@
 
     private async Task HandleValidSubmit()
     {
+        isSubmitting = true;
         updateErrorMessage = string.Empty;
         successMessage = string.Empty;
 
@@ -186,18 +256,23 @@
             if (success)
             {
                 successMessage = "User updated successfully.";
-                // Optionally, reload user details
-                await LoadUserDetails();
+                // Optionally, reload user details or redirect
+                await Task.Delay(2000); // Wait for 2 seconds before redirecting
+                Navigation.NavigateTo($"/admin/users/{UserId}");
             }
             else
             {
-                updateErrorMessage = "Failed to update the user.";
+                updateErrorMessage = "Failed to update the user. Please try again.";
             }
         }
         catch (Exception ex)
         {
             updateErrorMessage = "An error occurred while updating the user.";
             // Optionally log the exception
+        }
+        finally
+        {
+            isSubmitting = false;
         }
     }
 
@@ -206,3 +281,4 @@
         Navigation.NavigateTo($"/admin/users/{UserId}");
     }
 }
+
