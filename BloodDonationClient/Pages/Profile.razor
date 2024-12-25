@@ -31,61 +31,39 @@
     }
     else if (profile != null)
     {
-        <div class="row">
-            <!-- Profile Information -->
-            <div class="col-lg-6">
-                <div class="card mb-4 shadow-sm">
-                    <div class="card-header bg-primary text-white">
-                        <h4>@profile.Username's Profile</h4>
-                    </div>
-                    <div class="card-body">
-                        <p><strong>Email:</strong> @profile.Email</p>
-                        <p><strong>Blood Type:</strong> @profile.BloodType</p>
-                        <p><strong>Date of Birth:</strong> @profile.DateOfBirth.ToString("MMMM dd, yyyy")</p>
-                        <p><strong>Gender:</strong> @profile.Gender</p>
-                        <p><strong>Phone Number:</strong> @profile.PhoneNumber</p>
-                        <p><strong>Address:</strong> @profile.Address</p>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="d-flex justify-content-start mb-4">
-                    <button class="btn btn-outline-primary me-2" @onclick="ToggleEditForm">
-                        <i class="bi bi-pencil-square"></i> Edit Profile
-                    </button>
-                    <button class="btn btn-outline-danger" @onclick="ToggleDeleteForm">
-                        <i class="bi bi-trash"></i> Delete Profile
-                    </button>
-                </div>
-
-                <!-- Success and Error Messages -->
-                @if (successMessage != null)
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <!-- Profile Display or Edit Form -->
+                @if (!isEditing)
                 {
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        @successMessage
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <!-- Profile Information -->
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h4>@profile.Username's Profile</h4>
+                        </div>
+                        <div class="card-body">
+                            <p><strong>Email:</strong> @profile.Email</p>
+                            <p><strong>Blood Type:</strong> @profile.BloodType</p>
+                            <p><strong>Date of Birth:</strong> @profile.DateOfBirth.ToString("MMMM dd, yyyy")</p>
+                            <p><strong>Gender:</strong> @profile.Gender</p>
+                            <p><strong>Phone Number:</strong> @profile.PhoneNumber</p>
+                            <p><strong>Address:</strong> @profile.Address</p>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="d-flex justify-content-center mb-4">
+                        <button class="btn btn-outline-primary me-2" @onclick="ToggleEditForm">
+                            <i class="bi bi-pencil-square"></i> Edit Profile
+                        </button>
+                        <button class="btn btn-outline-danger" @onclick="ToggleDeleteForm">
+                            <i class="bi bi-trash"></i> Delete Profile
+                        </button>
                     </div>
                 }
-                @if (updateErrorMessage != null)
+                else
                 {
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        @updateErrorMessage
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                }
-                @if (deleteErrorMessage != null)
-                {
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        @deleteErrorMessage
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                }
-            </div>
-
-            <!-- Edit Profile Form -->
-            @if (isEditing)
-            {
-                <div class="col-lg-6">
+                    <!-- Edit Profile Form -->
                     <div class="card mb-4 shadow-sm">
                         <div class="card-header bg-warning text-white">
                             <h5>Edit Profile</h5>
@@ -147,7 +125,6 @@
                                         @if (isSaving)
                                         {
                                             <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                            
                                         }
                                         else
                                         {
@@ -159,13 +136,11 @@
                             </EditForm>
                         </div>
                     </div>
-                </div>
-            }
+                }
 
-            <!-- Delete Profile Form -->
-            @if (isDeleting)
-            {
-                <div class="col-lg-6">
+                <!-- Delete Profile Form -->
+                @if (isDeleting)
+                {
                     <div class="card mb-4 shadow-sm">
                         <div class="card-header bg-danger text-white">
                             <h5>Delete Profile</h5>
@@ -187,8 +162,31 @@
                             </EditForm>
                         </div>
                     </div>
-                </div>
-            }
+                }
+
+                <!-- Success and Error Messages -->
+                @if (successMessage != null)
+                {
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        @successMessage
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (updateErrorMessage != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @updateErrorMessage
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+                @if (deleteErrorMessage != null)
+                {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        @deleteErrorMessage
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                }
+            </div>
         </div>
     }
 </div>
@@ -223,15 +221,15 @@
             {
                 profile = await response.Content.ReadFromJsonAsync<ProfileModel>();
                 updateModel = new UpdateProfileModel
-                {
-                    Username = profile.Username,
-                    BloodType = profile.BloodType,
-                    DateOfBirth = profile.DateOfBirth,
-                    Gender = profile.Gender,
-                    PhoneNumber = profile.PhoneNumber,
-                    Address = profile.Address,
-                    NewEmail = profile.Email
-                };
+                    {
+                        Username = profile.Username,
+                        BloodType = profile.BloodType,
+                        DateOfBirth = profile.DateOfBirth,
+                        Gender = profile.Gender,
+                        PhoneNumber = profile.PhoneNumber,
+                        Address = profile.Address,
+                        NewEmail = profile.Email
+                    };
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
             {
@@ -255,7 +253,27 @@
     private void ToggleEditForm()
     {
         isEditing = !isEditing;
-        isDeleting = false;
+        if (isEditing)
+        {
+            isDeleting = false;
+        }
+        else
+        {
+            // Reset update model if cancelling edit
+            if (profile != null)
+            {
+                updateModel = new UpdateProfileModel
+                    {
+                        Username = profile.Username,
+                        BloodType = profile.BloodType,
+                        DateOfBirth = profile.DateOfBirth,
+                        Gender = profile.Gender,
+                        PhoneNumber = profile.PhoneNumber,
+                        Address = profile.Address,
+                        NewEmail = profile.Email
+                    };
+            }
+        }
         successMessage = null;
         updateErrorMessage = null;
     }
@@ -263,7 +281,15 @@
     private void ToggleDeleteForm()
     {
         isDeleting = !isDeleting;
-        isEditing = false;
+        if (isDeleting)
+        {
+            isEditing = false;
+        }
+        else
+        {
+            // Reset delete model if cancelling delete
+            deleteModel = new DeleteProfileModel();
+        }
         successMessage = null;
         deleteErrorMessage = null;
     }
@@ -277,16 +303,16 @@
         try
         {
             var payload = new UpdateProfileModel
-            {
-                Username = updateModel.Username,
-                BloodType = updateModel.BloodType,
-                DateOfBirth = updateModel.DateOfBirth,
-                Gender = updateModel.Gender,
-                PhoneNumber = updateModel.PhoneNumber,
-                Address = updateModel.Address,
-                NewEmail = updateModel.NewEmail,
-                NewPassword = updateModel.NewPassword
-            };
+                {
+                    Username = updateModel.Username,
+                    BloodType = updateModel.BloodType,
+                    DateOfBirth = updateModel.DateOfBirth,
+                    Gender = updateModel.Gender,
+                    PhoneNumber = updateModel.PhoneNumber,
+                    Address = updateModel.Address,
+                    NewEmail = updateModel.NewEmail,
+                    NewPassword = updateModel.NewPassword
+                };
 
             var response = await Http.PutAsJsonAsync("api/profile", payload);
             if (response.IsSuccessStatusCode)
@@ -330,9 +356,9 @@
         try
         {
             var response = await Http.SendAsync(new HttpRequestMessage(HttpMethod.Delete, "api/profile")
-            {
-                Content = JsonContent.Create(deleteModel)
-            });
+                {
+                    Content = JsonContent.Create(deleteModel)
+                });
 
             if (response.IsSuccessStatusCode)
             {

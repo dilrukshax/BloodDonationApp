@@ -223,13 +223,14 @@ code {
 
 /* General Card Styles */
 .card {
-    transition: transform var(--transition-speed) var(--transition-ease), box-shadow var(--transition-speed) var(--transition-ease);
+    transition: box-shadow var(--transition-speed) var(--transition-ease);
     border: none;
     border-radius: var(--border-radius);
 }
 
     .card:hover {
-        transform: translateY(-5px);
+        /* Removed the transform property to eliminate the wiggle effect */
+        /* transform: translateY(-5px); */
         box-shadow: var(--box-shadow-hover);
     }
 
@@ -254,7 +255,7 @@ code {
     .event-card .btn-primary {
         background-color: var(--secondary-color);
         border-color: var(--secondary-color);
-        transition: background-color var(--transition-speed) var(--transition-speed), border-color var(--transition-speed) var(--transition-speed);
+        transition: background-color var(--transition-speed) var(--transition-ease), border-color var(--transition-speed) var(--transition-ease);
     }
 
         .event-card .btn-primary:hover {
@@ -397,5 +398,3 @@ code {
 
     /* Additional responsive styles can be added here if needed */
 }
-
-

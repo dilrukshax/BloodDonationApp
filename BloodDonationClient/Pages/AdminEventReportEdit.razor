@@ -10,102 +10,134 @@
 <PageTitle>Edit Event Report</PageTitle>
 
 <div class="container my-5">
-    <h3 class="text-primary mb-4">Edit Event Report</h3>
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4 text-primary">Edit Event Report</h3>
 
-    @if (isLoading)
-    {
-        <div class="text-center my-5">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading event report...</span>
-            </div>
-            <p class="mt-3">Loading event report...</p>
-        </div>
-    }
-    else if (!string.IsNullOrEmpty(errorMessage))
-    {
-        <div class="alert alert-danger" role="alert">
-            @errorMessage
-        </div>
-    }
-    else if (eventReport != null)
-    {
-        <EditForm Model="updateDto" OnValidSubmit="HandleValidSubmit">
-            <DataAnnotationsValidator />
-            <ValidationSummary class="text-danger mb-3" />
-
-            <div class="mb-3">
-                <label for="eventTitle" class="form-label">Event</label>
-                <InputText id="eventTitle" class="form-control" @bind-Value="eventReport.EventTitle" disabled />
-            </div>
-
-            <div class="mb-3">
-                <label for="participatedPeopleCount" class="form-label">Participated People Count</label>
-                <InputNumber id="participatedPeopleCount" class="form-control" @bind-Value="updateDto.ParticipatedPeopleCount" required />
-            </div>
-
-            <div class="mb-3">
-                <label for="cost" class="form-label">Cost</label>
-                <InputNumber id="cost" class="form-control" @bind-Value="updateDto.Cost" step="0.01" required />
-            </div>
-
-            <h5 class="mt-4">Blood Collection Statistics</h5>
-
-            <div class="mb-3">
-                <label for="aPositive" class="form-label">A+</label>
-                <InputNumber id="aPositive" class="form-control" @bind-Value="updateDto.APositive" required />
-            </div>
-
-            <div class="mb-3">
-                <label for="bPositive" class="form-label">B+</label>
-                <InputNumber id="bPositive" class="form-control" @bind-Value="updateDto.BPositive" required />
-            </div>
-
-            <div class="mb-3">
-                <label for="abPositive" class="form-label">AB+</label>
-                <InputNumber id="abPositive" class="form-control" @bind-Value="updateDto.ABPositive" required />
-            </div>
-
-            <div class="mb-3">
-                <label for="oPositive" class="form-label">O+</label>
-                <InputNumber id="oPositive" class="form-control" @bind-Value="updateDto.OPositive" required />
-            </div>
-
-            <div class="mb-3">
-                <label for="aNegative" class="form-label">A-</label>
-                <InputNumber id="aNegative" class="form-control" @bind-Value="updateDto.ANegative" required />
-            </div>
-
-            <div class="mb-3">
-                <label for="bNegative" class="form-label">B-</label>
-                <InputNumber id="bNegative" class="form-control" @bind-Value="updateDto.BNegative" required />
-            </div>
-
-            <div class="mb-3">
-                <label for="abNegative" class="form-label">AB-</label>
-                <InputNumber id="abNegative" class="form-control" @bind-Value="updateDto.ABNegative" required />
-            </div>
-
-            <div class="mb-3">
-                <label for="oNegative" class="form-label">O-</label>
-                <InputNumber id="oNegative" class="form-control" @bind-Value="updateDto.ONegative" required />
-            </div>
-
-            <div class="d-flex justify-content-between mt-4">
-                <button type="submit" class="btn btn-warning" disabled="@isSubmitting">
-                    @if (isSubmitting)
+                    @if (isLoading)
                     {
-                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                        <span>Updating...</span>
+                        <div class="text-center my-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading event report...</span>
+                            </div>
+                            <p class="mt-3">Loading event report...</p>
+                        </div>
                     }
-                    else
+                    else if (!string.IsNullOrEmpty(errorMessage))
                     {
-                        <span>Update Report</span>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @errorMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
                     }
-                </button>
-                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+                    else if (eventReport != null)
+                    {
+                        <EditForm Model="updateDto" OnValidSubmit="HandleValidSubmit">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary class="text-danger mb-3" />
+
+                            <div class="mb-3 position-relative">
+                                <label for="eventTitle" class="form-label">Event</label>
+                                <InputText id="eventTitle" class="form-control ps-4" @bind-Value="eventReport.EventTitle" disabled />
+                                <i class="bi bi-calendar-fill form-icon"></i>
+                                <ValidationMessage For="@(() => eventReport.EventTitle)" />
+                            </div>
+
+                            <div class="mb-3 position-relative">
+                                <label for="participatedPeopleCount" class="form-label">Participated People Count</label>
+                                <InputNumber id="participatedPeopleCount" class="form-control ps-4" @bind-Value="updateDto.ParticipatedPeopleCount" required />
+                                <i class="bi bi-people-fill form-icon"></i>
+                                <ValidationMessage For="@(() => updateDto.ParticipatedPeopleCount)" />
+                            </div>
+
+                            <div class="mb-3 position-relative">
+                                <label for="cost" class="form-label">Cost</label>
+                                <InputNumber id="cost" class="form-control ps-4" @bind-Value="updateDto.Cost" step="0.01" required />
+                                <i class="bi bi-cash-stack form-icon"></i>
+                                <ValidationMessage For="@(() => updateDto.Cost)" />
+                            </div>
+
+                            <h5 class="mt-4">Blood Collection Statistics</h5>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3 position-relative">
+                                    <label for="aPositive" class="form-label">A+</label>
+                                    <InputNumber id="aPositive" class="form-control ps-4" @bind-Value="updateDto.APositive" required />
+                                    <i class="bi bi-droplet-fill form-icon"></i>
+                                    <ValidationMessage For="@(() => updateDto.APositive)" />
+                                </div>
+                                <div class="col-md-4 mb-3 position-relative">
+                                    <label for="bPositive" class="form-label">B+</label>
+                                    <InputNumber id="bPositive" class="form-control ps-4" @bind-Value="updateDto.BPositive" required />
+                                    <i class="bi bi-droplet-fill form-icon"></i>
+                                    <ValidationMessage For="@(() => updateDto.BPositive)" />
+                                </div>
+                                <div class="col-md-4 mb-3 position-relative">
+                                    <label for="abPositive" class="form-label">AB+</label>
+                                    <InputNumber id="abPositive" class="form-control ps-4" @bind-Value="updateDto.ABPositive" required />
+                                    <i class="bi bi-droplet-fill form-icon"></i>
+                                    <ValidationMessage For="@(() => updateDto.ABPositive)" />
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3 position-relative">
+                                    <label for="oPositive" class="form-label">O+</label>
+                                    <InputNumber id="oPositive" class="form-control ps-4" @bind-Value="updateDto.OPositive" required />
+                                    <i class="bi bi-droplet-fill form-icon"></i>
+                                    <ValidationMessage For="@(() => updateDto.OPositive)" />
+                                </div>
+                                <div class="col-md-4 mb-3 position-relative">
+                                    <label for="aNegative" class="form-label">A-</label>
+                                    <InputNumber id="aNegative" class="form-control ps-4" @bind-Value="updateDto.ANegative" required />
+                                    <i class="bi bi-droplet-fill form-icon"></i>
+                                    <ValidationMessage For="@(() => updateDto.ANegative)" />
+                                </div>
+                                <div class="col-md-4 mb-3 position-relative">
+                                    <label for="bNegative" class="form-label">B-</label>
+                                    <InputNumber id="bNegative" class="form-control ps-4" @bind-Value="updateDto.BNegative" required />
+                                    <i class="bi bi-droplet-fill form-icon"></i>
+                                    <ValidationMessage For="@(() => updateDto.BNegative)" />
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4 mb-3 position-relative">
+                                    <label for="abNegative" class="form-label">AB-</label>
+                                    <InputNumber id="abNegative" class="form-control ps-4" @bind-Value="updateDto.ABNegative" required />
+                                    <i class="bi bi-droplet-fill form-icon"></i>
+                                    <ValidationMessage For="@(() => updateDto.ABNegative)" />
+                                </div>
+                                <div class="col-md-4 mb-3 position-relative">
+                                    <label for="oNegative" class="form-label">O-</label>
+                                    <InputNumber id="oNegative" class="form-control ps-4" @bind-Value="updateDto.ONegative" required />
+                                    <i class="bi bi-droplet-fill form-icon"></i>
+                                    <ValidationMessage For="@(() => updateDto.ONegative)" />
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="submit" class="btn btn-success" disabled="@isSubmitting">
+                                    @if (isSubmitting)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        <span>Updating...</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Update Report</span>
+                                    }
+                                </button>
+                                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+                            </div>
+                        </EditForm>
+                    }
+                </div>
             </div>
-        </EditForm>
-    }
+        </div>
+    </div>
 </div>
 
 @code {
@@ -177,7 +209,7 @@
             if (success)
             {
                 successMessage = "Event report updated successfully!";
-                // Optionally, redirect after a short delay
+                // Optionally, redirect to the event reports list after a delay
                 await Task.Delay(2000);
                 Navigation.NavigateTo("/admin/eventreports");
             }
