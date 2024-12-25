@@ -95,6 +95,85 @@
     "ReturnTypes": []
   },
   {
+    "ContainingType": "BloodDonationAPI.Controllers.EventReportsController",
+    "Method": "GetAllEventReports",
+    "RelativePath": "api/EventReports",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BloodDonationAPI.Controllers.EventReportsController",
+    "Method": "CreateEventReport",
+    "RelativePath": "api/EventReports",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "createDto",
+        "Type": "BloodDonationAPI.DTOs.EventReportCreateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BloodDonationAPI.Controllers.EventReportsController",
+    "Method": "GetEventReport",
+    "RelativePath": "api/EventReports/{eventId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "eventId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BloodDonationAPI.Controllers.EventReportsController",
+    "Method": "UpdateEventReport",
+    "RelativePath": "api/EventReports/{eventId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "eventId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "updateDto",
+        "Type": "BloodDonationAPI.DTOs.EventReportUpdateDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BloodDonationAPI.Controllers.EventReportsController",
+    "Method": "DeleteEventReport",
+    "RelativePath": "api/EventReports/{eventId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "eventId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "BloodDonationAPI.Controllers.EventsController",
     "Method": "GetAllEvents",
     "RelativePath": "api/Events",

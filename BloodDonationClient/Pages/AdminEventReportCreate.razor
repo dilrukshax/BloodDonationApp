@@ -1,0 +1,199 @@
+﻿@page "/admin/eventreports/create"
+@using BloodDonationClient.Models
+@using BloodDonationClient.Services
+@inject EventReportService EventReportService
+@inject EventService EventService
+@inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components
+@attribute [Authorize(Roles = "admin")]
+
+<PageTitle>Create Event Report</PageTitle>
+
+<div class="container my-5">
+    <h3 class="text-primary mb-4">Create New Event Report</h3>
+
+    @if (!string.IsNullOrEmpty(successMessage))
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @successMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @errorMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (isLoading)
+    {
+        <div class="text-center my-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading events...</span>
+            </div>
+            <p class="mt-3">Loading events...</p>
+        </div>
+    }
+    else
+    {
+        <EditForm Model="createDto" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger mb-3" />
+
+            <div class="mb-3">
+                <label for="eventId" class="form-label">Event</label>
+                <InputSelect id="eventId" class="form-select" @bind-Value="createDto.EventId" required>
+                    <option value="">-- Select Event --</option>
+                    @foreach (var evt in events)
+                    {
+                        <option value="@evt.Id">@evt.Title (@evt.EventDate.ToString("d"))</option>
+                    }
+                </InputSelect>
+            </div>
+
+            <div class="mb-3">
+                <label for="participatedPeopleCount" class="form-label">Participated People Count</label>
+                <InputNumber id="participatedPeopleCount" class="form-control" @bind-Value="createDto.ParticipatedPeopleCount" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="cost" class="form-label">Cost</label>
+                <InputNumber id="cost" class="form-control" @bind-Value="createDto.Cost" step="0.01" required />
+            </div>
+
+            <h5 class="mt-4">Blood Collection Statistics</h5>
+
+            <div class="mb-3">
+                <label for="aPositive" class="form-label">A+</label>
+                <InputNumber id="aPositive" class="form-control" @bind-Value="createDto.APositive" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="bPositive" class="form-label">B+</label>
+                <InputNumber id="bPositive" class="form-control" @bind-Value="createDto.BPositive" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="abPositive" class="form-label">AB+</label>
+                <InputNumber id="abPositive" class="form-control" @bind-Value="createDto.ABPositive" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="oPositive" class="form-label">O+</label>
+                <InputNumber id="oPositive" class="form-control" @bind-Value="createDto.OPositive" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="aNegative" class="form-label">A-</label>
+                <InputNumber id="aNegative" class="form-control" @bind-Value="createDto.ANegative" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="bNegative" class="form-label">B-</label>
+                <InputNumber id="bNegative" class="form-control" @bind-Value="createDto.BNegative" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="abNegative" class="form-label">AB-</label>
+                <InputNumber id="abNegative" class="form-control" @bind-Value="createDto.ABNegative" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="oNegative" class="form-label">O-</label>
+                <InputNumber id="oNegative" class="form-control" @bind-Value="createDto.ONegative" required />
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn btn-success" disabled="@isSubmitting">
+                    @if (isSubmitting)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span>Submitting...</span>
+                    }
+                    else
+                    {
+                        <span>Create Report</span>
+                    }
+                </button>
+                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+            </div>
+        </EditForm>
+    }
+
+</div>
+
+@code {
+    private EventReportCreateDto createDto = new EventReportCreateDto();
+    private string successMessage;
+    private string errorMessage;
+    private bool isSubmitting = false;
+
+    private List<EventDto> events = new List<EventDto>();
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadEvents();
+    }
+
+    private async Task LoadEvents()
+    {
+        isLoading = true;
+        errorMessage = string.Empty;
+
+        try
+        {
+            events = await EventService.GetAllEventsAsync();
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "Failed to load events.";
+            // Optionally log the exception
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        isSubmitting = true;
+        errorMessage = string.Empty;
+        successMessage = string.Empty;
+
+        try
+        {
+            var success = await EventReportService.CreateEventReportAsync(createDto);
+            if (success)
+            {
+                successMessage = "Event report created successfully!";
+                // Optionally, redirect to the event reports list after a delay
+                await Task.Delay(2000);
+                Navigation.NavigateTo("/admin/eventreports");
+            }
+            else
+            {
+                errorMessage = "Failed to create the event report.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while creating the event report.";
+            // Optionally log the exception
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/admin/eventreports");
+    }
+}

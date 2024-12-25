@@ -41,6 +41,7 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<EventService>();
 builder.Services.AddScoped<RegistrationService>();
+builder.Services.AddScoped<EventReportService>();
 
 var host = builder.Build();
 

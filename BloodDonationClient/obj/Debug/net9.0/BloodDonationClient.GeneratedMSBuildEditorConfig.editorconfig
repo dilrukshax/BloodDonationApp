@@ -32,6 +32,22 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XFJlZGlyZWN0VG9Mb2dpbi5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Project/BloodDonationApp/BloodDonationClient/Pages/AdminEventReportCreate.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5FdmVudFJlcG9ydENyZWF0ZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/BloodDonationApp/BloodDonationClient/Pages/AdminEventReportDetail.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5FdmVudFJlcG9ydERldGFpbC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/BloodDonationApp/BloodDonationClient/Pages/AdminEventReportEdit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5FdmVudFJlcG9ydEVkaXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project/BloodDonationApp/BloodDonationClient/Pages/AdminEventReports.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5FdmVudFJlcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Project/BloodDonationApp/BloodDonationClient/Pages/AdminRegistrations.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5SZWdpc3RyYXRpb25zLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 

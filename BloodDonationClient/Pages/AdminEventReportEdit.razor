@@ -1,0 +1,204 @@
+﻿@page "/admin/eventreports/{EventId:int}/edit"
+@using BloodDonationClient.Models
+@using BloodDonationClient.Services
+@inject EventReportService EventReportService
+@inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components
+@attribute [Authorize(Roles = "admin")]
+
+<PageTitle>Edit Event Report</PageTitle>
+
+<div class="container my-5">
+    <h3 class="text-primary mb-4">Edit Event Report</h3>
+
+    @if (isLoading)
+    {
+        <div class="text-center my-5">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading event report...</span>
+            </div>
+            <p class="mt-3">Loading event report...</p>
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger" role="alert">
+            @errorMessage
+        </div>
+    }
+    else if (eventReport != null)
+    {
+        <EditForm Model="updateDto" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary class="text-danger mb-3" />
+
+            <div class="mb-3">
+                <label for="eventTitle" class="form-label">Event</label>
+                <InputText id="eventTitle" class="form-control" @bind-Value="eventReport.EventTitle" disabled />
+            </div>
+
+            <div class="mb-3">
+                <label for="participatedPeopleCount" class="form-label">Participated People Count</label>
+                <InputNumber id="participatedPeopleCount" class="form-control" @bind-Value="updateDto.ParticipatedPeopleCount" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="cost" class="form-label">Cost</label>
+                <InputNumber id="cost" class="form-control" @bind-Value="updateDto.Cost" step="0.01" required />
+            </div>
+
+            <h5 class="mt-4">Blood Collection Statistics</h5>
+
+            <div class="mb-3">
+                <label for="aPositive" class="form-label">A+</label>
+                <InputNumber id="aPositive" class="form-control" @bind-Value="updateDto.APositive" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="bPositive" class="form-label">B+</label>
+                <InputNumber id="bPositive" class="form-control" @bind-Value="updateDto.BPositive" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="abPositive" class="form-label">AB+</label>
+                <InputNumber id="abPositive" class="form-control" @bind-Value="updateDto.ABPositive" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="oPositive" class="form-label">O+</label>
+                <InputNumber id="oPositive" class="form-control" @bind-Value="updateDto.OPositive" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="aNegative" class="form-label">A-</label>
+                <InputNumber id="aNegative" class="form-control" @bind-Value="updateDto.ANegative" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="bNegative" class="form-label">B-</label>
+                <InputNumber id="bNegative" class="form-control" @bind-Value="updateDto.BNegative" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="abNegative" class="form-label">AB-</label>
+                <InputNumber id="abNegative" class="form-control" @bind-Value="updateDto.ABNegative" required />
+            </div>
+
+            <div class="mb-3">
+                <label for="oNegative" class="form-label">O-</label>
+                <InputNumber id="oNegative" class="form-control" @bind-Value="updateDto.ONegative" required />
+            </div>
+
+            <div class="d-flex justify-content-between mt-4">
+                <button type="submit" class="btn btn-warning" disabled="@isSubmitting">
+                    @if (isSubmitting)
+                    {
+                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                        <span>Updating...</span>
+                    }
+                    else
+                    {
+                        <span>Update Report</span>
+                    }
+                </button>
+                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+            </div>
+        </EditForm>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    private EventReportDto eventReport;
+    private EventReportUpdateDto updateDto = new EventReportUpdateDto();
+    private bool isLoading = true;
+    private string errorMessage;
+    private string successMessage;
+    private bool isSubmitting = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadEventReport();
+    }
+
+    private async Task LoadEventReport()
+    {
+        isLoading = true;
+        errorMessage = string.Empty;
+
+        try
+        {
+            eventReport = await EventReportService.GetEventReportByEventIdAsync(EventId);
+            if (eventReport != null)
+            {
+                // Initialize the update DTO with existing data
+                updateDto = new EventReportUpdateDto
+                    {
+                        ParticipatedPeopleCount = eventReport.ParticipatedPeopleCount,
+                        Cost = eventReport.Cost,
+                        APositive = eventReport.APositive,
+                        BPositive = eventReport.BPositive,
+                        ABPositive = eventReport.ABPositive,
+                        OPositive = eventReport.OPositive,
+                        ANegative = eventReport.ANegative,
+                        BNegative = eventReport.BNegative,
+                        ABNegative = eventReport.ABNegative,
+                        ONegative = eventReport.ONegative
+                    };
+            }
+            else
+            {
+                errorMessage = "Event report not found.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while loading the event report.";
+            // Optionally log the exception
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        isSubmitting = true;
+        errorMessage = string.Empty;
+        successMessage = string.Empty;
+
+        try
+        {
+            var success = await EventReportService.UpdateEventReportAsync(EventId, updateDto);
+            if (success)
+            {
+                successMessage = "Event report updated successfully!";
+                // Optionally, redirect after a short delay
+                await Task.Delay(2000);
+                Navigation.NavigateTo("/admin/eventreports");
+            }
+            else
+            {
+                errorMessage = "Failed to update the event report.";
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = "An error occurred while updating the event report.";
+            // Optionally log the exception
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo("/admin/eventreports");
+    }
+}

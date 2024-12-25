@@ -86,6 +86,55 @@ namespace BloodDonationAPI.Migrations
                     b.ToTable("EventRegistrations");
                 });
 
+            modelBuilder.Entity("BloodDonationAPI.Models.EventReport", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ABNegative")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ABPositive")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ANegative")
+                        .HasColumnType("int");
+
+                    b.Property<int>("APositive")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BNegative")
+                        .HasColumnType("int");
+
+                    b.Property<int>("BPositive")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Cost")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("EventId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ONegative")
+                        .HasColumnType("int");
+
+                    b.Property<int>("OPositive")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ParticipatedPeopleCount")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("EventId")
+                        .IsUnique();
+
+                    b.ToTable("EventReports");
+                });
+
             modelBuilder.Entity("BloodDonationAPI.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -156,6 +205,17 @@ namespace BloodDonationAPI.Migrations
                     b.Navigation("Event");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BloodDonationAPI.Models.EventReport", b =>
+                {
+                    b.HasOne("BloodDonationAPI.Models.Event", "Event")
+                        .WithMany()
+                        .HasForeignKey("EventId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Event");
                 });
 #pragma warning restore 612, 618
         }
