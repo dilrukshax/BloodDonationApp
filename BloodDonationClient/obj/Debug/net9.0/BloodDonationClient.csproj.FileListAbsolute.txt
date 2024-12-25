@@ -1266,10 +1266,10 @@ D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\refint\BloodDon
 D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\BloodDonationClient.pdb
 D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\ref\BloodDonationClient.dll
 D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\ehfxp7kn5m-e7l4r6113s.gz
-D:\Project\BloodDonationApp\BloodDonationClient\bin\Debug\net9.0\wwwroot\_framework\BloodDonationClient.0d9zijha1m.pdb
-D:\Project\BloodDonationApp\BloodDonationClient\bin\Debug\net9.0\wwwroot\_framework\BloodDonationClient.0h02j497xt.wasm
-D:\Project\BloodDonationApp\BloodDonationClient\bin\Debug\net9.0\wwwroot\_framework\BloodDonationClient.0d9zijha1m.pdb.gz
-D:\Project\BloodDonationApp\BloodDonationClient\bin\Debug\net9.0\wwwroot\_framework\BloodDonationClient.0h02j497xt.wasm.gz
-D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\djl9iu9b1m-0h02j497xt.gz
-D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\0ifoyb4hs8-0d9zijha1m.gz
-D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\7vd6p97w3w-mxuptwv5ln.gz
+D:\Project\BloodDonationApp\BloodDonationClient\bin\Debug\net9.0\wwwroot\_framework\BloodDonationClient.7ecys9swbe.pdb
+D:\Project\BloodDonationApp\BloodDonationClient\bin\Debug\net9.0\wwwroot\_framework\BloodDonationClient.mj4gk8rjm2.wasm
+D:\Project\BloodDonationApp\BloodDonationClient\bin\Debug\net9.0\wwwroot\_framework\BloodDonationClient.7ecys9swbe.pdb.gz
+D:\Project\BloodDonationApp\BloodDonationClient\bin\Debug\net9.0\wwwroot\_framework\BloodDonationClient.mj4gk8rjm2.wasm.gz
+D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\djl9iu9b1m-mj4gk8rjm2.gz
+D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\0ifoyb4hs8-7ecys9swbe.gz
+D:\Project\BloodDonationApp\BloodDonationClient\obj\Debug\net9.0\compressed\7vd6p97w3w-pdjhb7adbl.gz

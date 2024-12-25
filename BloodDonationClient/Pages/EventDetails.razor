@@ -1,8 +1,12 @@
 ﻿@page "/events/{EventId:int}"
 @using BloodDonationClient.Models
 @using BloodDonationClient.Services
+@using Microsoft.AspNetCore.Components.Forms
 @inject EventService EventService
+@inject RegistrationService RegistrationService
 @inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IJSRuntime JSRuntime
 
 <PageTitle>Event Details</PageTitle>
@@ -52,7 +56,31 @@
                         </li>
                         <!-- Removed "Created At" and "Last Updated" fields -->
                     </ul>
-                    <div class="d-flex justify-content-end">
+
+                    <!-- Register Button -->
+                    <AuthorizeView>
+                        <Authorized>
+                            @if (isUserRegistered)
+                            {
+                                <button class="btn btn-secondary" disabled>
+                                    Already Registered
+                                </button>
+                            }
+                            else
+                            {
+                                <button class="btn btn-primary" @onclick="RegisterForEvent">
+                                    <i class="bi bi-person-plus-fill me-2"></i> Register for this Event
+                                </button>
+                            }
+                        </Authorized>
+                        <NotAuthorized>
+                            <button class="btn btn-primary" @onclick="NavigateToLogin">
+                                <i class="bi bi-person-plus-fill me-2"></i> Register for this Event
+                            </button>
+                        </NotAuthorized>
+                    </AuthorizeView>
+
+                    <div class="d-flex justify-content-end mt-3">
                         <button class="btn btn-secondary" @onclick="GoBack">
                             <i class="bi bi-arrow-left me-2"></i> Back to Events
                         </button>
@@ -80,9 +108,12 @@
     private bool isLoading = true;
     private string errorMessage;
 
+    private bool isUserRegistered = false;
+
     protected override async Task OnInitializedAsync()
     {
         await LoadEventDetails();
+        await CheckIfUserRegistered();
     }
 
     private async Task LoadEventDetails()
@@ -93,12 +124,14 @@
         try
         {
             eventDetail = await EventService.GetEventByIdAsync(EventId);
+            if (eventDetail == null)
+            {
+                errorMessage = "Event not found.";
+            }
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             errorMessage = "An error occurred while loading event details. Please try again later.";
-            // Optionally log the exception here
-            // Logger.LogError(ex, "Error loading event details.");
         }
         finally
         {
@@ -106,22 +139,39 @@
         }
     }
 
+    private async Task CheckIfUserRegistered()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            try
+            {
+                var registrations = await RegistrationService.GetMyRegistrationsAsync();
+                isUserRegistered = registrations.Any(r => r.EventId == EventId);
+            }
+            catch (Exception)
+            {
+                // Assume not registered if there's an error
+                isUserRegistered = false;
+            }
+        }
+    }
+
+    private void RegisterForEvent()
+    {
+        Navigation.NavigateTo($"/events/{EventId}/register");
+    }
+
+    private void NavigateToLogin()
+    {
+        // Optionally, pass return URL
+        Navigation.NavigateTo($"/login?returnUrl=/events/{EventId}/register");
+    }
+
     private void GoBack()
     {
         Navigation.NavigateTo("/events");
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            // Initialize Bootstrap tooltips if any
-            await JSRuntime.InvokeVoidAsync("eval", @"
-                var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle=""tooltip""]'))
-                var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                    return new bootstrap.Tooltip(tooltipTriggerEl)
-                })
-            ");
-        }
     }
 }

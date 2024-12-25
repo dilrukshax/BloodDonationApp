@@ -1,0 +1,192 @@
+﻿@page "/events/{EventId:int}/register"
+@using BloodDonationClient.Models
+@using BloodDonationClient.Services
+@using Microsoft.AspNetCore.Components.Forms
+@inject RegistrationService RegistrationService
+@inject EventService EventService
+@inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Register for Event</PageTitle>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-center mb-4 text-primary">Register for Event</h3>
+
+                    @if (!string.IsNullOrEmpty(successMessage))
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @successMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @errorMessage
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    @if (!isUserRegistered)
+                    {
+                        <EditForm Model="createRegistrationDto" OnValidSubmit="HandleValidSubmit">
+                            <DataAnnotationsValidator />
+                            <ValidationSummary class="text-danger mb-3" />
+
+                            <!-- Event Title (Read-only) -->
+                            <div class="mb-3">
+                                <label class="form-label">Event:</label>
+                                <InputText @bind-Value="eventTitle" class="form-control" readonly />
+                            </div>
+
+                            <!-- Registration Date (Read-only) -->
+                            <div class="mb-3">
+                                <label class="form-label">Registration Date:</label>
+                                <InputDate @bind-Value="registrationDate" class="form-control" readonly />
+                            </div>
+
+                            <!-- Action Buttons -->
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-success" disabled="@isSubmitting">
+                                    @if (isSubmitting)
+                                    {
+                                        <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                        <span>Registering...</span>
+                                    }
+                                    else
+                                    {
+                                        <span>Register</span>
+                                    }
+                                </button>
+                                <button type="button" class="btn btn-secondary" @onclick="Cancel">Cancel</button>
+                            </div>
+                        </EditForm>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info" role="alert">
+                            You have already registered for this event.
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button class="btn btn-secondary" @onclick="Cancel">Back to Event</button>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="text-center mt-3">
+                <p><a href="/events/@EventId" class="text-decoration-none"><strong>Back to Event Details</strong></a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int EventId { get; set; }
+
+    private CreateRegistrationDto createRegistrationDto = new CreateRegistrationDto();
+    private string successMessage;
+    private string errorMessage;
+    private bool isSubmitting = false;
+    private string eventTitle = string.Empty;
+    private DateTime registrationDate = DateTime.UtcNow;
+    private bool isUserRegistered = false;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadEventDetails();
+        await CheckIfUserRegistered();
+    }
+
+    private async Task LoadEventDetails()
+    {
+        isLoading = true;
+        errorMessage = string.Empty;
+
+        try
+        {
+            var eventDetail = await EventService.GetEventByIdAsync(EventId);
+            if (eventDetail != null)
+            {
+                eventTitle = eventDetail.Title;
+                registrationDate = DateTime.UtcNow;
+                createRegistrationDto.EventId = EventId;
+            }
+            else
+            {
+                errorMessage = "Event not found.";
+            }
+        }
+        catch (Exception)
+        {
+            errorMessage = "Failed to load event details.";
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private async Task CheckIfUserRegistered()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            try
+            {
+                var registrations = await RegistrationService.GetMyRegistrationsAsync();
+                isUserRegistered = registrations.Any(r => r.EventId == EventId);
+            }
+            catch (Exception)
+            {
+                // Assume not registered if there's an error
+                isUserRegistered = false;
+            }
+        }
+    }
+
+    private async Task HandleValidSubmit()
+    {
+        isSubmitting = true;
+        errorMessage = string.Empty;
+        successMessage = string.Empty;
+
+        try
+        {
+            var success = await RegistrationService.RegisterForEventAsync(EventId);
+            if (success)
+            {
+                successMessage = "Successfully registered for the event!";
+                // Optionally, redirect after a short delay
+                await Task.Delay(2000);
+                Navigation.NavigateTo("/my-registrations");
+            }
+            else
+            {
+                errorMessage = "Failed to register for the event. You might already be registered.";
+            }
+        }
+        catch (Exception)
+        {
+            errorMessage = "An error occurred while registering for the event.";
+        }
+        finally
+        {
+            isSubmitting = false;
+        }
+    }
+
+    private void Cancel()
+    {
+        Navigation.NavigateTo($"/events/{EventId}");
+    }
+}

@@ -214,5 +214,73 @@
       }
     ],
     "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BloodDonationAPI.Controllers.RegistrationsController",
+    "Method": "RegisterForEvent",
+    "RelativePath": "api/Registrations",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "createDto",
+        "Type": "BloodDonationAPI.DTOs.CreateRegistrationDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BloodDonationAPI.Controllers.RegistrationsController",
+    "Method": "GetAllRegistrations",
+    "RelativePath": "api/Registrations",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BloodDonationAPI.Controllers.RegistrationsController",
+    "Method": "DeleteRegistration",
+    "RelativePath": "api/Registrations/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BloodDonationAPI.Controllers.RegistrationsController",
+    "Method": "AdminDeleteRegistration",
+    "RelativePath": "api/Registrations/admin/{id}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "BloodDonationAPI.Controllers.RegistrationsController",
+    "Method": "GetMyRegistrations",
+    "RelativePath": "api/Registrations/my",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
   }
 ]

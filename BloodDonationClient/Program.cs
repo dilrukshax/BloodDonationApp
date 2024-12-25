@@ -1,3 +1,5 @@
+// File: BloodDonationClient/Program.cs
+
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using BloodDonationClient;
@@ -34,10 +36,11 @@ builder.Services.AddHttpClient("BloodDonationAPI", client =>
 // Register the named HttpClient for dependency injection
 builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient("BloodDonationAPI"));
 
-// Register AuthService and AdminService to use the named HttpClient
+// Register AuthService, AdminService, EventService, and RegistrationService
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<AdminService>();
 builder.Services.AddScoped<EventService>();
+builder.Services.AddScoped<RegistrationService>();
 
 var host = builder.Build();
 
