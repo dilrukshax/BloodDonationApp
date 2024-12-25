@@ -28,6 +28,10 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Project/BloodDonationApp/BloodDonationClient/Components/BloodVariantsChart.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xCbG9vZFZhcmlhbnRzQ2hhcnQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Project/BloodDonationApp/BloodDonationClient/Layout/RedirectToLogin.razor]
 build_metadata.AdditionalFiles.TargetPath = TGF5b3V0XFJlZGlyZWN0VG9Mb2dpbi5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 

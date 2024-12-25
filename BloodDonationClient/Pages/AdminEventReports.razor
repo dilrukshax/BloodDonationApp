@@ -1,6 +1,7 @@
 ﻿@page "/admin/eventreports"
 @using BloodDonationClient.Models
 @using BloodDonationClient.Services
+@using BloodDonationClient.Components
 @inject EventReportService EventReportService
 @inject NavigationManager Navigation
 @using Microsoft.AspNetCore.Authorization
@@ -30,6 +31,15 @@
     }
     else if (eventReports != null && eventReports.Count > 0)
     {
+        <!-- Aggregated Blood Statistics Chart -->
+        <div class="mb-5">
+            <h5>Total Blood Variants Collected Across All Events</h5>
+            <BloodVariantsChart CanvasId="totalBloodVariantsChart"
+                                Labels="@bloodVariantLabels"
+                                Data="@totalBloodVariantData" />
+        </div>
+
+        <!-- Event Reports Table -->
         <table class="table table-striped">
             <thead>
                 <tr>
@@ -110,9 +120,26 @@
     private int eventIdToDelete;
     private bool showDeleteConfirmation = false;
 
+    // Define blood variant labels
+    private List<string> bloodVariantLabels = new List<string>
+    {
+        "A+",
+        "B+",
+        "AB+",
+        "O+",
+        "A-",
+        "B-",
+        "AB-",
+        "O-"
+    };
+
+    // Aggregated blood variant data
+    private List<int> totalBloodVariantData = new List<int>();
+
     protected override async Task OnInitializedAsync()
     {
         await LoadEventReports();
+        AggregateBloodVariants();
     }
 
     private async Task LoadEventReports()
@@ -127,11 +154,30 @@
         catch (Exception ex)
         {
             errorMessage = "An error occurred while loading event reports.";
+            Console.Error.WriteLine(ex);
             // Optionally log the exception
         }
         finally
         {
             isLoading = false;
+        }
+    }
+
+    private void AggregateBloodVariants()
+    {
+        // Initialize the total counts to zero
+        totalBloodVariantData = new List<int> { 0, 0, 0, 0, 0, 0, 0, 0 };
+
+        foreach (var report in eventReports)
+        {
+            totalBloodVariantData[0] += report.APositive;
+            totalBloodVariantData[1] += report.BPositive;
+            totalBloodVariantData[2] += report.ABPositive;
+            totalBloodVariantData[3] += report.OPositive;
+            totalBloodVariantData[4] += report.ANegative;
+            totalBloodVariantData[5] += report.BNegative;
+            totalBloodVariantData[6] += report.ABNegative;
+            totalBloodVariantData[7] += report.ONegative;
         }
     }
 
@@ -166,6 +212,7 @@
             if (success)
             {
                 await LoadEventReports();
+                AggregateBloodVariants();
                 // Optionally, show a success message
             }
             else
@@ -176,6 +223,7 @@
         catch (Exception ex)
         {
             errorMessage = "An error occurred while deleting the event report.";
+            Console.Error.WriteLine(ex);
             // Optionally log the exception
         }
     }

@@ -1,7 +1,7 @@
-﻿
-@page "/admin/eventreports/{EventId:int}"
+﻿@page "/admin/eventreports/{EventId:int}"
 @using BloodDonationClient.Models
 @using BloodDonationClient.Services
+@using BloodDonationClient.Components
 @inject EventReportService EventReportService
 @inject NavigationManager Navigation
 @using Microsoft.AspNetCore.Authorization
@@ -38,7 +38,7 @@
                 <p><strong>Participated People Count:</strong> @eventReport.ParticipatedPeopleCount</p>
                 <p><strong>Cost:</strong> @eventReport.Cost.ToString("C")</p>
 
-                <h5>Blood Collection Statistics:</h5>
+                <h5 class="mt-4">Blood Collection Statistics:</h5>
                 <ul class="list-group list-group-flush mb-3">
                     <li class="list-group-item">A+: @eventReport.APositive</li>
                     <li class="list-group-item">B+: @eventReport.BPositive</li>
@@ -49,6 +49,13 @@
                     <li class="list-group-item">AB-: @eventReport.ABNegative</li>
                     <li class="list-group-item">O-: @eventReport.ONegative</li>
                 </ul>
+
+                <!-- Bar Graph for Blood Variants -->
+                <div class="mt-4">
+                    <BloodVariantsChart CanvasId="bloodVariantsChart"
+                                        Labels="@bloodVariantLabels"
+                                        Data="@bloodVariantData" />
+                </div>
 
                 <div class="d-flex justify-content-between mt-4">
                     <button class="btn btn-warning" @onclick="EditReport">Edit Report</button>
@@ -67,6 +74,20 @@
     private bool isLoading = true;
     private string errorMessage;
 
+    private List<string> bloodVariantLabels = new List<string>
+    {
+        "A+",
+        "B+",
+        "AB+",
+        "O+",
+        "A-",
+        "B-",
+        "AB-",
+        "O-"
+    };
+
+    private List<int> bloodVariantData = new List<int>();
+
     protected override async Task OnInitializedAsync()
     {
         await LoadEventReport();
@@ -80,7 +101,22 @@
         try
         {
             eventReport = await EventReportService.GetEventReportByEventIdAsync(EventId);
-            if (eventReport == null)
+            if (eventReport != null)
+            {
+                // Populate blood variant data
+                bloodVariantData = new List<int>
+                {
+                    eventReport.APositive,
+                    eventReport.BPositive,
+                    eventReport.ABPositive,
+                    eventReport.OPositive,
+                    eventReport.ANegative,
+                    eventReport.BNegative,
+                    eventReport.ABNegative,
+                    eventReport.ONegative
+                };
+            }
+            else
             {
                 errorMessage = "Event report not found.";
             }
@@ -88,6 +124,7 @@
         catch (Exception ex)
         {
             errorMessage = "An error occurred while loading the event report.";
+            Console.Error.WriteLine(ex);
             // Optionally log the exception
         }
         finally

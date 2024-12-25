@@ -1,0 +1,30 @@
+﻿@using Microsoft.JSInterop
+@inject IJSRuntime JSRuntime
+
+<canvas id="@CanvasId" width="400" height="200"></canvas>
+
+@code {
+    [Parameter]
+    public string CanvasId { get; set; } = $"bloodVariantsChart_{Guid.NewGuid()}";
+
+    [Parameter]
+    public List<string> Labels { get; set; }
+
+    [Parameter]
+    public List<int> Data { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            if (Labels != null && Data != null && Labels.Count == Data.Count)
+            {
+                await JSRuntime.InvokeVoidAsync("chartHelper.createBarChart", CanvasId, Labels, Data);
+            }
+            else
+            {
+                Console.Error.WriteLine("Labels and Data must be provided and have the same count for BloodVariantsChart.");
+            }
+        }
+    }
+}
