@@ -1,27 +1,74 @@
 ﻿@inherits LayoutComponentBase
 
-<PageTitle>BloodDonationClient</PageTitle>
+@using Microsoft.AspNetCore.Components.Authorization
 
 <CascadingAuthenticationState>
-    <div class="page">
-        <div class="sidebar">
-            <NavMenu />
-        </div>
-
-        <main>
+    <div class="main-layout">
+        <!-- Header Section -->
+        <header class="header">
             <div class="top-row px-4">
-                <AuthorizeView>
-                    <Authorized>
-                        <span class="mr-2">Hello, @username!</span>
-                        <button class="btn btn-link" @onclick="Logout">Logout</button>
-                    </Authorized>
-                    <NotAuthorized>
-                        <NavLink class="nav-link" href="login">Login</NavLink>
-                        <NavLink class="nav-link" href="register">Register</NavLink>
-                    </NotAuthorized>
-                </AuthorizeView>
-            </div>
+                <div class="nav-links">
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="">Home</NavLink>
+                        </li>
 
+                        <!-- Admin-specific links -->
+                        <AuthorizeView Roles="admin">
+                            <Authorized>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="admin/users">Manage Users</NavLink>
+                                </li>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="admin/events">Manage Events</NavLink>
+                                </li>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="admin/eventreports">Event Reports</NavLink>
+                                </li>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="admin/registrations">All Registrations</NavLink>
+                                </li>
+                            </Authorized>
+                        </AuthorizeView>
+
+                        <!-- General authenticated user links -->
+                        <AuthorizeView>
+                            <Authorized>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="profile">Profile</NavLink>
+                                </li>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="events">Events</NavLink>
+                                </li>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="my-registrations">My Registrations</NavLink>
+                                </li>
+                            </Authorized>
+                            <NotAuthorized>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="login">Login</NavLink>
+                                </li>
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="register">Register</NavLink>
+                                </li>
+                            </NotAuthorized>
+                        </AuthorizeView>
+                    </ul>
+                </div>
+
+                <div class="auth-controls">
+                    <AuthorizeView>
+                        <Authorized>
+                            <span class="mr-2" style="color: black;">Hello, @username!</span>
+                            <button class="btn btn-link" style="color: black;" @onclick="Logout">Logout</button>
+                        </Authorized>
+                    </AuthorizeView>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Section -->
+        <main>
             <article class="content px-4">
                 @Body
             </article>

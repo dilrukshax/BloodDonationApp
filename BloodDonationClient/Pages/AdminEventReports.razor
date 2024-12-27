@@ -52,13 +52,20 @@
         </div>
 
         <!-- Event Reports Table -->
-        <table class="table table-striped">
+        <table class="table table-striped table-bordered">
             <thead>
                 <tr>
                     <th>Event Title</th>
                     <th>Participated People</th>
                     <th>Cost</th>
-                    <th>Total Blood Collected</th>
+                    <th>A+</th>
+                    <th>B+</th>
+                    <th>AB+</th>
+                    <th>O+</th>
+                    <th>A-</th>
+                    <th>B-</th>
+                    <th>AB-</th>
+                    <th>O-</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -69,16 +76,14 @@
                         <td>@report.EventTitle</td>
                         <td>@report.ParticipatedPeopleCount</td>
                         <td>@report.Cost.ToString("C")</td>
-                        <td>
-                            A+: @report.APositive <br />
-                            B+: @report.BPositive <br />
-                            AB+: @report.ABPositive <br />
-                            O+: @report.OPositive <br />
-                            A-: @report.ANegative <br />
-                            B-: @report.BNegative <br />
-                            AB-: @report.ABNegative <br />
-                            O-: @report.ONegative
-                        </td>
+                        <td>@report.APositive</td>
+                        <td>@report.BPositive</td>
+                        <td>@report.ABPositive</td>
+                        <td>@report.OPositive</td>
+                        <td>@report.ANegative</td>
+                        <td>@report.BNegative</td>
+                        <td>@report.ABNegative</td>
+                        <td>@report.ONegative</td>
                         <td>
                             <button class="btn btn-info btn-sm me-2" @onclick="() => ViewReport(report.EventId)">
                                 <i class="bi bi-eye me-1"></i>

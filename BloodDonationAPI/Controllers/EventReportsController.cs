@@ -176,5 +176,38 @@ namespace BloodDonationAPI.Controllers
 
             return Ok("Event report deleted successfully.");
         }
+
+        // GET: api/eventreports/summary
+        [HttpGet("summary")]
+        [AllowAnonymous] // Accessible to everyone
+        public async Task<IActionResult> GetEventSummary()
+        {
+            // Get the current date for comparison
+            var currentDate = DateTime.Now;
+
+            // Filter for past events only
+            var pastEvents = _context.Events.Where(e => e.EventDate < currentDate);
+
+            var totalEvents = await pastEvents.CountAsync();
+
+            // Filter EventReports based on past events
+            var pastEventIds = pastEvents.Select(e => e.Id);
+            var pastEventReports = _context.EventReports.Where(er => pastEventIds.Contains(er.EventId));
+
+            var totalParticipation = await pastEventReports.SumAsync(er => er.ParticipatedPeopleCount);
+            var totalBloodUnits = await pastEventReports.SumAsync(er =>
+                er.APositive + er.BPositive + er.ABPositive + er.OPositive +
+                er.ANegative + er.BNegative + er.ABNegative + er.ONegative);
+
+            var summary = new
+            {
+                TotalEvents = totalEvents,
+                TotalParticipation = totalParticipation,
+                TotalBloodUnits = totalBloodUnits
+            };
+
+            return Ok(summary);
+        }
+
     }
 }

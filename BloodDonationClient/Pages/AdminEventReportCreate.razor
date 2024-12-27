@@ -162,7 +162,7 @@
     private string errorMessage;
     private bool isSubmitting = false;
 
-    private List<EventDto> events = new List<EventDto>();
+    private List<EventDto> events = new List<EventDto>(); // List of past events
     private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
@@ -177,7 +177,9 @@
 
         try
         {
-            events = await EventService.GetAllEventsAsync();
+            var allEvents = await EventService.GetAllEventsAsync();
+            var currentDate = DateTime.Now;
+            events = allEvents.Where(evt => evt.EventDate < currentDate).OrderByDescending(evt => evt.EventDate).ToList();
         }
         catch (Exception ex)
         {

@@ -398,3 +398,16 @@ code {
 
     /* Additional responsive styles can be added here if needed */
 }
+/* =========================
+   Navigation Bar Styling
+   ========================= */
+.nav .nav-link {
+    color: black !important; /* Ensure the font color is black */
+    text-decoration: none; /* Optional: Removes underline */
+    font-weight: bold; /* Optional: Makes the font bold */
+    transition: color var(--transition-speed) var(--transition-ease); /* Adds smooth transition */
+}
+
+    .nav .nav-link:hover {
+        color: var(--primary-hover-color); /* Optional: Change color on hover */
+    }

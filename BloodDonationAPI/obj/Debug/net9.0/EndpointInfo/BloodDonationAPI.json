@@ -294,6 +294,18 @@
         }
       }
     },
+    "/api/EventReports/summary": {
+      "get": {
+        "tags": [
+          "EventReports"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
     "/api/Events": {
       "get": {
         "tags": [

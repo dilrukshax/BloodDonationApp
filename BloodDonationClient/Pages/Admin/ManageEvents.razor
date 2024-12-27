@@ -12,6 +12,12 @@
     <!-- Add New Event Button -->
     <button class="btn btn-primary mb-3" @onclick="NavigateToAddEvent">Add New Event</button>
 
+    <!-- Toggle Buttons for Past and Present Events -->
+    <div class="mb-3">
+        <button class="btn btn-outline-primary me-2" @onclick="ShowPresentEvents" disabled="@(showPastEvents ? null : "disabled")">Show Present Events</button>
+        <button class="btn btn-outline-secondary" @onclick="ShowPastEvents" disabled="@(showPastEvents ? "disabled" : null)">Show Past Events</button>
+    </div>
+
     @if (isLoading)
     {
         <p><em>Loading events...</em></p>
@@ -20,7 +26,7 @@
     {
         <div class="alert alert-danger">@errorMessage</div>
     }
-    else if (events != null && events.Count > 0)
+    else if (filteredEvents != null && filteredEvents.Count > 0)
     {
         <!-- Event Table -->
         <table class="table table-striped">
@@ -33,7 +39,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var evt in events)
+                @foreach (var evt in filteredEvents)
                 {
                     <tr>
                         <td>@evt.Title</td>
@@ -82,10 +88,13 @@
 
 @code {
     private List<EventDto> events = new List<EventDto>();
+    private List<EventDto> filteredEvents = new List<EventDto>();
     private bool isLoading = true;
     private string errorMessage;
     private int eventIdToDelete;
     private bool showDeleteConfirmation = false;
+
+    private bool showPastEvents = false; // Toggle state
 
     protected override async Task OnInitializedAsync()
     {
@@ -100,6 +109,7 @@
         try
         {
             events = await EventService.GetAllEventsAsync();
+            FilterEvents();
         }
         catch (Exception ex)
         {
@@ -110,6 +120,32 @@
         {
             isLoading = false;
         }
+    }
+
+    private void FilterEvents()
+    {
+        var currentDate = DateTime.Now;
+
+        if (showPastEvents)
+        {
+            filteredEvents = events.Where(evt => evt.EventDate < currentDate).OrderByDescending(evt => evt.EventDate).ToList();
+        }
+        else
+        {
+            filteredEvents = events.Where(evt => evt.EventDate >= currentDate).OrderBy(evt => evt.EventDate).ToList();
+        }
+    }
+
+    private void ShowPastEvents()
+    {
+        showPastEvents = true;
+        FilterEvents();
+    }
+
+    private void ShowPresentEvents()
+    {
+        showPastEvents = false;
+        FilterEvents();
     }
 
     private void NavigateToAddEvent()

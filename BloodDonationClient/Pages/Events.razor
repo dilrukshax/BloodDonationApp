@@ -131,7 +131,10 @@
 
     private void ApplyFilters()
     {
+        var currentDate = DateTime.Now;
+
         filteredEvents = events.Where(evt =>
+            evt.EventDate >= currentDate && // Exclude past events
             (string.IsNullOrWhiteSpace(searchTerm) || evt.Title.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)) &&
             (!filterDate.HasValue || evt.EventDate.Date == filterDate.Value.Date) &&
             (string.IsNullOrWhiteSpace(filterLocation) || evt.Location.Contains(filterLocation, StringComparison.OrdinalIgnoreCase))

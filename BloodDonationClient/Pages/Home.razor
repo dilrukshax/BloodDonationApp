@@ -1,7 +1,7 @@
 ﻿@page "/"
 @using BloodDonationClient.Models
 @using BloodDonationClient.Services
-@inject EventService EventService
+@inject EventReportService EventReportService
 @inject NavigationManager Navigation
 @inject IJSRuntime JSRuntime
 
@@ -22,10 +22,10 @@
         <div class="col-md-4 col-lg-3 mb-4">
             <div class="card bg-danger text-white shadow-lg stats-card">
                 <div class="card-body text-center">
-                    <i class="bi bi-people-fill display-4 mb-3"></i>
-                    <h5 class="card-title">Total Donors</h5>
-                    <p class="display-4">@totalDonors</p>
-                    <p>Your contribution matters!</p>
+                    <i class="bi bi-calendar-event-fill display-4 mb-3"></i>
+                    <h5 class="card-title">Events Held</h5>
+                    <p class="display-4">@totalEvents</p>
+                    <p>Organized to save lives.</p>
                 </div>
             </div>
         </div>
@@ -42,10 +42,10 @@
         <div class="col-md-4 col-lg-3 mb-4">
             <div class="card bg-info text-white shadow-lg stats-card">
                 <div class="card-body text-center">
-                    <i class="bi bi-heart-fill display-4 mb-3"></i>
-                    <h5 class="card-title">Lives Saved</h5>
-                    <p class="display-4">@livesSaved</p>
-                    <p>Impacting our community.</p>
+                    <i class="bi bi-people-fill display-4 mb-3"></i>
+                    <h5 class="card-title">Total Participation</h5>
+                    <p class="display-4">@totalParticipation</p>
+                    <p>Every donor counts.</p>
                 </div>
             </div>
         </div>
@@ -123,35 +123,6 @@
         </div>
     </div>
 
-    <!-- Environmental Impact Section -->
-    <div class="row justify-content-center my-5">
-        <div class="col-12">
-            <h3 class="text-center text-primary mb-4">Environmental Impact</h3>
-            <div class="row">
-                <div class="col-md-6 mb-4">
-                    <div class="card environmental-impact-card shadow-sm h-100">
-                        <div class="card-body">
-                            <h5 class="card-title text-success">Sustainable Practices</h5>
-                            <p class="card-text">
-                                Our blood donation events are organized with sustainability in mind. We utilize eco-friendly materials and minimize waste to ensure that our operations have a positive impact on the environment.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 mb-4">
-                    <div class="card environmental-impact-card shadow-sm h-100">
-                        <div class="card-body">
-                            <h5 class="card-title text-success">Community Health</h5>
-                            <p class="card-text">
-                                By promoting regular blood donations, we contribute to the overall health and resilience of our community. Healthy communities are the backbone of a sustainable environment.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Call to Action Section -->
     <div class="row justify-content-center my-5">
         <div class="col-12 col-md-8 text-center">
@@ -170,20 +141,24 @@
 </div>
 
 @code {
-    private string username = "User"; // Initialize the username variable
-    private int totalDonors = 1234;
-    private int totalBloodUnits = 5678;
-    private int livesSaved = 2000; // Example additional statistic
+    private int totalEvents = 0;
+    private int totalBloodUnits = 0;
+    private int totalParticipation = 0;
 
     protected override async Task OnInitializedAsync()
     {
-        // Optionally fetch dynamic data here
-        // For example:
-        // username = await AuthService.GetUsernameAsync();
-        // var stats = await EventService.GetStatisticsAsync();
-        // totalDonors = stats.TotalDonors;
-        // totalBloodUnits = stats.TotalBloodUnits;
-        // livesSaved = stats.LivesSaved;
+        try
+        {
+            // Fetch event summary data
+            var summary = await EventReportService.GetEventSummaryAsync();
+            totalEvents = summary.TotalEvents;
+            totalBloodUnits = summary.TotalBloodUnits;
+            totalParticipation = summary.TotalParticipation;
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine($"Error fetching summary: {ex.Message}");
+        }
     }
 
     // Handler methods for button clicks

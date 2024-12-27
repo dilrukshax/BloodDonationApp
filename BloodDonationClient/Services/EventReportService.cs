@@ -70,5 +70,19 @@ namespace BloodDonationClient.Services
             var response = await _httpClient.DeleteAsync($"api/EventReports/{eventId}");
             return response.IsSuccessStatusCode;
         }
+
+        // Get event summary (new method)
+        public async Task<EventSummaryDto> GetEventSummaryAsync()
+        {
+            var response = await _httpClient.GetAsync("api/EventReports/summary");
+            if (response.IsSuccessStatusCode)
+            {
+                return await response.Content.ReadFromJsonAsync<EventSummaryDto>();
+            }
+            else
+            {
+                throw new Exception("Failed to fetch the event summary.");
+            }
+        }
     }
 }
