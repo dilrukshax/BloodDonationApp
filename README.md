@@ -218,7 +218,7 @@ cd blood-donation-app
 
 ### **Event Registration Managemen**
 
-![Web capture_27-12-2024_11154_localhost](https://github.com/user-attachments/assets/64e39dab-c53b-40fa-b594-2230581e880f)
+![Web capture_30-12-2024_91036_localhost](https://github.com/user-attachments/assets/1d4ca675-66e5-4232-9e70-ea81f855e4a4)
 
 ### **All Events**
 
