@@ -87,13 +87,6 @@ The Blood Donation App follows a **Client-Server Architecture** with a clear sep
 
 Follow these steps to set up the project locally.
 
-### **Prerequisites**
-
-- **.NET 6.0 SDK**: [Download Here](https://dotnet.microsoft.com/download/dotnet/6.0)
-- **Node.js & npm**: [Download Here](https://nodejs.org/)
-- **SQL Server**: [Download Here](https://www.microsoft.com/en-us/sql-server/sql-server-downloads)
-- **Git**: [Download Here](https://git-scm.com/downloads)
-
 ### **Clone the Repository**
 
 ```bash
@@ -225,7 +218,7 @@ cd blood-donation-app
 
 ### **Event Registration Managemen**
 
-![Web capture_27-12-2024_11154_localhost](https://github.com/user-attachments/assets/64e39dab-c53b-40fa-b594-2230581e880f)
+![Web capture_30-12-2024_91036_localhost](https://github.com/user-attachments/assets/1d4ca675-66e5-4232-9e70-ea81f855e4a4)
 
 ### **All Events**
 
