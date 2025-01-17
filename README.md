@@ -3,25 +3,16 @@
 <!-- Centered Core Technologies Badges -->
 <div align="center">
 
-![Blazor](https://img.shields.io/badge/Blazor-512BD4?style=for-the-badge&logo=blazor&logoColor=white)
 ![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-512BD4?style=for-the-badge&logo=.net&logoColor=white)
+    ![SQL Server](https://img.shields.io/badge/SQL_Server-CC2927?style=for-the-badge&logo=microsoft-sql-server&logoColor=white)
+    ![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white)
+    ![MailKit](https://img.shields.io/badge/MailKit-6C757D?style=for-the-badge&logo=mailkit&logoColor=white)
+    ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white)
+    ![Blazor](https://img.shields.io/badge/Blazor-512BD4?style=for-the-badge&logo=blazor&logoColor=white)
 
 </div>
 
-
-## 🚀 Table of Contents
-
-- [🌟 Features](#-features)
-- [🛠️ Technologies Used](#️-technologies-used)
-- [📈 Architecture](#architecture)
-- [🔧 Setup & Installation](#-setup--installation)
-- [🧑‍💻 Usage](#-usage)
-- [📸 Screenshots](#-screenshots)
-- [🤝 Contributing](#-contributing)
-- [📄 License](#-license)
-- [📫 Contact](#-contact)
-
-## 🌟 Features
+## Features
 
 - **User Registration & Authentication**: Secure user sign-up and login with role-based access (admin and user).
 - **Event Management**: Create, update, delete, and view blood donation events.
@@ -36,33 +27,11 @@
   - **Aggregated Statistics**: Access summaries of blood variants collected across all events and overall participation metrics.
   - **Role Management**: Assign or change user roles to control access levels within the application.
 
-## 🛠️ Technologies Used
-
-### **Core Technologies**
-<div align="center">
-
-![Blazor](https://img.shields.io/badge/Blazor-512BD4?style=for-the-badge&logo=blazor&logoColor=white)
-    ![C#](https://img.shields.io/badge/C%23-239120?style=for-the-badge&logo=csharp&logoColor=white)
-    ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)
-    ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)
-    
-</div>
 
 ### **Technologies Used**
-<div align="center">
 
-![ASP.NET Core](https://img.shields.io/badge/ASP.NET_Core-512BD4?style=for-the-badge&logo=.net&logoColor=white)
-    ![Entity Framework Core](https://img.shields.io/badge/Entity_Framework_Core-512BD4?style=for-the-badge&logo=.net&logoColor=white)
-    ![SQL Server](https://img.shields.io/badge/SQL_Server-CC2927?style=for-the-badge&logo=microsoft-sql-server&logoColor=white)
-    ![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=json-web-tokens&logoColor=white)
-    ![BCrypt](https://img.shields.io/badge/Bcrypt-4F5D95?style=for-the-badge&logo=security&logoColor=white)
-    ![MailKit](https://img.shields.io/badge/MailKit-6C757D?style=for-the-badge&logo=mailkit&logoColor=white)
-    ![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?style=for-the-badge&logo=bootstrap&logoColor=white)
-    ![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white)
-    
-</div>
 
-## 📈 Architecture
+## Architecture
 
 The Blood Donation App follows a **Client-Server Architecture** with a clear separation between the frontend and backend. Here's an overview:
 
@@ -83,7 +52,7 @@ The Blood Donation App follows a **Client-Server Architecture** with a clear sep
 - **SQL Server**: Stores user data, event details, registrations, and reports.
 - **Migrations**: Managed via Entity Framework Core to handle database schema changes.
 
-## 🔧 Setup & Installation
+## Setup & Installation
 
 Follow these steps to set up the project locally.
 
@@ -166,66 +135,33 @@ cd blood-donation-app
 
     The frontend should now be accessible at `https://localhost:5001` or `http://localhost:5000`.
 
-## 🧑‍💻 Usage
 
-1. **Register a New User**
-
-    - Navigate to the registration page.
-    - Fill in the required details.
-    - If you have an admin code, enter it to register as an admin.
-
-2. **Login**
-
-    - Use your credentials to log in.
-    - Admin users have access to additional features.
-
-3. **Manage Events**
-
-    - **Admins** can create, update, and delete events.
-    - **Users** can view events and register for them.
-
-4. **View Reports**
-
-    - **Admins** can view detailed reports of events, including participation and blood units collected.
-
-5. **Profile Management**
-
-    - Users can view and update their profiles.
-    - Change passwords and update contact information as needed.
-
-6. **Advanced Admin Functions**
-
-    - **User Management**: Administrators can view all registered users, update user information, and delete users as necessary.
-    - **Event Report Management**: Create comprehensive reports for each event, including participation numbers and blood variant collections.
-    - **Aggregated Statistics**: Access summaries of blood variants collected across all events and overall participation metrics.
-    - **Role Management**: Assign or change user roles to control access levels within the application.
-
-## 📸 Screenshots
+##  Screenshots
 
 <!-- Replace the image URLs with actual screenshots of your application -->
 
-### **Home Page**
+#### **Home Page**
 
 ![Web capture_27-12-2024_111348_localhost](https://github.com/user-attachments/assets/6da78f9e-5053-44c5-a61e-870b476406cb)
 
-### **Event Management**
+#### **Event Management**
 
 ![Web capture_27-12-2024_111436_localhost](https://github.com/user-attachments/assets/0c81f7de-d003-4242-a559-362f2f20c02e)
 
-### **Event Report Managemen**
+#### **Event Report Managemen**
 
 ![Web capture_27-12-2024_111450_localhost](https://github.com/user-attachments/assets/a47a5930-7090-483f-ac04-55e796efc72e)
 
-### **Event Registration Managemen**
+#### **Event Registration Managemen**
 
 ![Web capture_30-12-2024_91036_localhost](https://github.com/user-attachments/assets/1d4ca675-66e5-4232-9e70-ea81f855e4a4)
 
-### **All Events**
+#### **All Events**
 
 ![Web capture_27-12-2024_111516_localhost](https://github.com/user-attachments/assets/1624efdc-11bf-4e69-a496-cffd3b767afb)
 
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are what make the open-source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
@@ -250,11 +186,8 @@ Contributions are what make the open-source community such an amazing place to l
 
 5. **Open a Pull Request**
 
-## 📄 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
-
-## 📫 Contact
+## Contact
 
 
 - **Email**: [dilandilruksha0@gmail.com](mailto:dilandilruksha0@gmail.com)
